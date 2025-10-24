@@ -1,18 +1,13 @@
 // app/layout.tsx
 import type { Metadata } from 'next';
-import { Inter, Unbounded } from 'next/font/google';
+import { Inter } from 'next/font/google';
 import './globals.css';
 
-const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
-const unbounded = Unbounded({ 
-  subsets: ['latin'], 
-  variable: '--font-unbounded',
-  weight: ['400', '600', '700'] // Подключаем несколько начертаний
-});
+const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'textex - обменник текстом',
-  description: 'Быстрый обмен текстом',
+  title: 'textex - Обменник текстом',
+  description: 'Быстрый обмен текстовыми сообщениями',
 };
 
 export default function RootLayout({
@@ -21,8 +16,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="ru" className={`${inter.variable} ${unbounded.variable}`}>
-      <body className="antialiased">{children}</body>
+    <html lang="ru">
+      <body className={inter.className}>{children}</body>
     </html>
   );
 }
