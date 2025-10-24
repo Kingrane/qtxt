@@ -13,7 +13,7 @@ export async function POST(request: NextRequest) {
 
     const code = nanoid(5); 
 
-    await kv.set(code, text, { ex: 1800 });
+    await kv.set(code, text, { ex: 600 });
 
     return NextResponse.json({ code });
   } catch (error) {
