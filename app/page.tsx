@@ -18,7 +18,7 @@ export default function Home() {
 
   const handleShare = async () => {
     if (!shareText.trim()) {
-      setShareError('Текст не может быть пустым');
+      setShareError('Текст не может быть пустым :P');
       return;
     }
     setShareLoading(true);
@@ -33,7 +33,7 @@ export default function Home() {
       });
 
       if (!response.ok) {
-        throw new Error('Не удалось поделиться текстом');
+        throw new Error('Не удалось поделиться текстом :/');
       }
 
       const data = await response.json();
@@ -48,7 +48,7 @@ export default function Home() {
 
   const handleGet = async () => {
     if (!getCode.trim()) {
-      setGetError('Код не может быть пустым');
+      setGetError('Код не может быть пустым :P');
       return;
     }
     setGetLoading(true);
@@ -60,7 +60,7 @@ export default function Home() {
       
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || 'Текст не найден или устарел');
+        throw new Error(errorData.error || 'Текст не найден или устарел :(');
       }
 
       const data = await response.json();
@@ -88,8 +88,8 @@ export default function Home() {
       <div className="w-full max-w-lg p-8 space-y-8 bg-gray-800 rounded-lg border border-gray-700">
         {/* МИНИМАЛИЗМ: Заголовок с одним акцентным цветом */}
         <div className="flex justify-between items-center">
-          <h1 className="text-4xl font-thin text-white">TextEx</h1>
-          <span className="text-xs font-medium text-cyan-500">BETA</span>
+          <h1 className="text-4xl font-thin text-white">textex</h1>
+          <span className="text-xs font-medium text-cyan-500">privet</span>
         </div>
         
         {/* МИНИМАЛИЗМ: Переключатель из двух кнопок без фона */}
@@ -146,7 +146,7 @@ export default function Home() {
                     )}
                   </button>
                 </div>
-                <p className="text-xs text-gray-500 mt-3">Текст будет удален через 30 минут.</p>
+                <p className="text-xs text-gray-500 mt-3">Текст будет удален через 10 минут.</p>
               </div>
             )}
           </div>
