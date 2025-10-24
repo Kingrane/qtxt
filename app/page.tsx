@@ -120,7 +120,7 @@ export default function Home() {
               <div className="p-4 bg-green-500/20 border border-green-400/50 rounded-lg text-center">
                 <p className="text-sm text-gray-300">Ваш код:</p>
                 <p className="text-3xl font-mono font-bold text-green-400">{shareCode}</p>
-                <p className="text-xs text-gray-400 mt-2">Скопируйте его. Текст будет удален после прочтения.</p>
+                <p className="text-xs text-gray-400 mt-2">Скопируйте его. Текст будет удален после прочтения или через 30 минут.</p>
               </div>
             )}
           </div>
