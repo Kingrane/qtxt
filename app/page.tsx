@@ -17,7 +17,7 @@ export default function Home() {
 
   const handleShare = async () => {
     if (!shareText.trim()) {
-      setShareError('Текст не может быть пустым :P');
+      setShareError('Текст не может быть пустым');
       return;
     }
     setShareLoading(true);
@@ -32,7 +32,7 @@ export default function Home() {
       });
 
       if (!response.ok) {
-        throw new Error('Не удалось поделиться текстом :/');
+        throw new Error('Не удалось поделиться текстом');
       }
 
       const data = await response.json();
@@ -47,7 +47,7 @@ export default function Home() {
 
   const handleGet = async () => {
     if (!getCode.trim()) {
-      setGetError('Код не может быть пустым :P');
+      setGetError('Код не может быть пустым');
       return;
     }
     setGetLoading(true);
@@ -59,7 +59,7 @@ export default function Home() {
       
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || 'Текст не найден или устарел :(');
+        throw new Error(errorData.error || 'Текст не найден или устарел');
       }
 
       const data = await response.json();
@@ -73,11 +73,11 @@ export default function Home() {
   };
 
   return (
-
+    // НОВЫЙ ДИЗАЙН: темный фон с градиентом
     <main className="flex min-h-screen flex-col items-center justify-center p-4 bg-gradient-to-br from-gray-900 via-purple-900 to-violet-900">
-   
+      {/* НОВЫЙ ДИЗАЙН: карточка с эффектом стекла */}
       <div className="w-full max-w-lg p-8 space-y-6 bg-white/10 backdrop-blur-lg rounded-2xl shadow-2xl border border-white/20">
-        <h1 className="text-4xl font-bold text-center text-white">textex обмен текстом</h1>
+        <h1 className="text-4xl font-bold text-center text-white">Обменник текстом</h1>
         
         <div className="flex justify-center p-1 bg-white/10 rounded-lg">
           <button
@@ -104,13 +104,13 @@ export default function Home() {
               value={shareText}
               onChange={(e) => setShareText(e.target.value)}
               placeholder="Введите ваш текст здесь..."
-     
+              // ИСПРАВЛЕНИЕ: явно задаем цвет текста и фона
               className="w-full h-40 p-3 bg-white/20 border border-white/30 rounded-lg resize-none placeholder:text-gray-400 text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
             />
             <button
               onClick={handleShare}
               disabled={shareLoading}
-
+              // НОВЫЙ ДИЗАЙН: кнопка с градиентом
               className="w-full py-3 px-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold rounded-lg hover:from-purple-600 hover:to-pink-600 disabled:from-gray-600 disabled:to-gray-700 transition-all"
             >
               {shareLoading ? 'Создание ссылки...' : 'Поделиться'}
@@ -131,7 +131,7 @@ export default function Home() {
             <input
               type="text"
               value={getCode}
- 
+              // ИСПРАВЛЕНИЕ: УБРАЛИ .toUpperCase() и задали стили
               onChange={(e) => setGetCode(e.target.value)}
               placeholder="Введите код для получения текста"
               className="w-full p-3 bg-white/20 border border-white/30 rounded-lg placeholder:text-gray-400 text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
@@ -141,7 +141,7 @@ export default function Home() {
               disabled={getLoading}
               className="w-full py-3 px-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold rounded-lg hover:from-purple-600 hover:to-pink-600 disabled:from-gray-600 disabled:to-gray-700 transition-all"
             >
-              {getLoading ? 'Загрузка...' : 'Получить текст :)'}
+              {getLoading ? 'Загрузка...' : 'Получить текст'}
             </button>
             {getError && <p className="text-center text-red-400">{getError}</p>}
             {getText && (
