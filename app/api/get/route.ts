@@ -8,10 +8,10 @@ export async function GET(request: NextRequest) {
     const code = searchParams.get('code');
 
     if (!code) {
-      return NextResponse.json({ error: 'Код не предоставлен :P' }, { status: 400 });
+      return NextResponse.json({ error: 'Код не предоставлен :/' }, { status: 400 });
     }
 
-    const text = await kv.getdel(code);
+    const text = await kv.get<string>(code);
 
     if (!text) {
       return NextResponse.json({ error: 'Текст не найден или устарел :(' }, { status: 404 });
