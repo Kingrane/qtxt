@@ -88,7 +88,7 @@ export default function Home() {
       <div className="w-full max-w-lg p-8 space-y-8 bg-gray-800 rounded-lg border border-gray-700">
         {/* МИНИМАЛИЗМ: Заголовок с одним акцентным цветом */}
         <div className="flex justify-between items-center">
-          <h1 className="text-4xl font-thin text-white">textex</h1>
+          <h1 className="text-4xl font-thin text-white">qtxt</h1>
           <span className="text-xs font-medium text-cyan-500">privet</span>
         </div>
         
