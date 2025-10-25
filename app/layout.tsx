@@ -6,8 +6,8 @@ import './globals.css';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'textex - Обменник текстом',
-  description: 'Быстрый обмен текстовыми сообщениями',
+  title: 'qtxt - Обменник текстом',
+  description: 'text obmennik',
 };
 
 export default function RootLayout({
