@@ -57,7 +57,7 @@ export default function Home() {
 
     try {
       const response = await fetch(`/api/get?code=${getCode}`);
-      
+
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.error || 'Текст не найден или устарел :(');
@@ -72,7 +72,7 @@ export default function Home() {
       setGetLoading(false);
     }
   };
-  
+
   const handleCopy = () => {
     if (shareCode) {
       navigator.clipboard.writeText(shareCode);
@@ -82,102 +82,130 @@ export default function Home() {
   };
 
   return (
-    // МИНИМАЛИЗМ: Темно-серый фон, без градиентов
-    <main className="flex min-h-screen flex-col items-center justify-center p-4 bg-gray-900">
-      {/* МИНИМАЛИЗМ: Простая карточка с четкой границей */}
-      <div className="w-full max-w-lg p-8 space-y-8 bg-gray-800 rounded-lg border border-gray-700">
-        {/* МИНИМАЛИЗМ: Заголовок с одним акцентным цветом */}
-        <div className="flex justify-between items-center">
-          <h1 className="text-4xl font-thin text-white">qtxt</h1>
-          <span className="text-xs font-medium text-cyan-500">privet</span>
-        </div>
-        
-        {/* МИНИМАЛИЗМ: Переключатель из двух кнопок без фона */}
-        <div className="flex justify-center space-x-4">
-          <button
-            onClick={() => setMode('share')}
-            className={`pb-1 font-medium transition-colors border-b-2 ${
-              mode === 'share' ? 'text-cyan-500 border-cyan-500' : 'text-gray-500 border-transparent hover:text-gray-300'
-            }`}
-          >
-            Поделиться
-          </button>
-          <button
-            onClick={() => setMode('get')}
-            className={`pb-1 font-medium transition-colors border-b-2 ${
-              mode === 'get' ? 'text-cyan-500 border-cyan-500' : 'text-gray-500 border-transparent hover:text-gray-300'
-            }`}
-          >
-            Получить
-          </button>
-        </div>
+      <main className="flex min-h-screen flex-col items-center justify-center p-4 bg-[#CAFFBF] relative">
+        <div className="w-full max-w-lg p-8 space-y-6 bg-white border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
+          <h1 className="text-4xl font-black text-center text-black uppercase tracking-tight">
+            qtxt
+          </h1>
 
-        {mode === 'share' && (
-          <div className="space-y-6">
+          {/* Переключатель режимов */}
+          <div className="flex gap-3">
+            <button
+                onClick={() => setMode('share')}
+                className={`flex-1 py-3 px-4 font-bold border-4 border-black uppercase tracking-wide transition-all ${
+                    mode === 'share'
+                        ? 'bg-[#FF6B6B] text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] translate-x-0 translate-y-0'
+                        : 'bg-white text-black hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-1 hover:-translate-y-1'
+                }`}
+            >
+              Поделиться
+            </button>
+            <button
+                onClick={() => setMode('get')}
+                className={`flex-1 py-3 px-4 font-bold border-4 border-black uppercase tracking-wide transition-all ${
+                    mode === 'get'
+                        ? 'bg-[#9BF6FF] text-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] translate-x-0 translate-y-0'
+                        : 'bg-white text-black hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-1 hover:-translate-y-1'
+                }`}
+            >
+              Получить
+            </button>
+          </div>
+
+          {/* Режим "Поделиться" */}
+          {mode === 'share' && (
+              <div className="space-y-4">
             <textarea
-              value={shareText}
-              onChange={(e) => setShareText(e.target.value)}
-              placeholder="Введите ваш текст здесь..."
-              // МИНИМАЛИЗМ: Строгие поля ввода
-              className="w-full h-40 p-3 bg-gray-900 border border-gray-700 rounded-md resize-none placeholder-gray-500 text-white focus:outline-none focus:border-cyan-500 transition-colors"
+                value={shareText}
+                onChange={(e) => setShareText(e.target.value)}
+                placeholder="Введите ваш текст здесь..."
+                className="w-full h-40 p-4 bg-white text-black border-4 border-black resize-none focus:outline-none focus:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] transition-shadow font-medium placeholder:text-gray-500 placeholder:font-normal"
             />
-            <button
-              onClick={handleShare}
-              disabled={shareLoading}
-              // МИНИМАЛИЗМ: Простая кнопка с акцентным цветом
-              className="w-full py-3 px-4 bg-cyan-500 text-gray-900 font-semibold rounded-md hover:bg-cyan-400 disabled:bg-gray-600 disabled:text-gray-400 transition-colors"
-            >
-              {shareLoading ? 'Создание ссылки...' : 'Поделиться'}
-            </button>
-            {shareError && <p className="text-center text-red-500 text-sm">{shareError}</p>}
-            {shareCode && (
-              // МИНИМАЛИЗМ: Блок с результатом с левой цветной полосой
-              <div className="p-4 bg-gray-900 rounded-md border-l-4 border-cyan-500">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-xs text-gray-400 uppercase tracking-wider">Ваш код</p>
-                    <p className="text-2xl font-mono font-bold text-white mt-1">{shareCode}</p>
-                  </div>
-                  <button onClick={handleCopy} className="p-2 text-gray-400 hover:text-white transition-colors">
-                    {copied ? (
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
-                    ) : (
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" /></svg>
-                    )}
-                  </button>
-                </div>
-                <p className="text-xs text-gray-500 mt-3">Текст будет удален через 10 минут.</p>
+                <button
+                    onClick={handleShare}
+                    disabled={shareLoading}
+                    className="w-full py-4 px-6 bg-[#FF6B6B] text-white font-black text-lg uppercase border-4 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-1 hover:-translate-y-1 disabled:bg-gray-400 disabled:cursor-not-allowed disabled:transform-none transition-all active:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-1 active:translate-y-1"
+                >
+                  {shareLoading ? 'Создание ссылки...' : 'Поделиться'}
+                </button>
+                {shareError && (
+                    <div className="p-4 bg-[#FF6B6B] border-4 border-black text-center">
+                      <p className="font-bold text-white">{shareError}</p>
+                    </div>
+                )}
+                {shareCode && (
+                    <div className="p-6 bg-[#FFC6FF] border-4 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-xs font-bold text-black mb-2 uppercase tracking-wider">Ваш код</p>
+                          <p className="text-3xl font-black font-mono text-black break-all">
+                            {shareCode}
+                          </p>
+                        </div>
+                        <button
+                            onClick={handleCopy}
+                            className="p-3 bg-white border-4 border-black hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-1 hover:-translate-y-1 transition-all active:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] active:translate-x-1 active:translate-y-1"
+                        >
+                          {copied ? (
+                              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                              </svg>
+                          ) : (
+                              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+                              </svg>
+                          )}
+                        </button>
+                      </div>
+                      <p className="text-xs font-bold text-black mt-4 opacity-70">
+                        Текст будет удален через 10 минут.
+                      </p>
+                    </div>
+                )}
               </div>
-            )}
-          </div>
-        )}
+          )}
 
-        {mode === 'get' && (
-          <div className="space-y-6">
-            <input
-              type="text"
-              value={getCode}
-              onChange={(e) => setGetCode(e.target.value)}
-              placeholder="Введите код для получения текста"
-              className="w-full p-3 bg-gray-900 border border-gray-700 rounded-md placeholder-gray-500 text-white focus:outline-none focus:border-cyan-500 transition-colors"
-            />
-            <button
-              onClick={handleGet}
-              disabled={getLoading}
-              className="w-full py-3 px-4 bg-cyan-500 text-gray-900 font-semibold rounded-md hover:bg-cyan-400 disabled:bg-gray-600 disabled:text-gray-400 transition-colors"
-            >
-              {getLoading ? 'Загрузка...' : 'Получить текст'}
-            </button>
-            {getError && <p className="text-center text-red-500 text-sm">{getError}</p>}
-            {getText && (
-              <div className="p-4 bg-gray-900 rounded-md border-l-4 border-cyan-500">
-                <p className="text-xs text-gray-400 uppercase tracking-wider">Ваш текст</p>
-                <p className="text-white mt-2 whitespace-pre-wrap">{getText}</p>
+          {/* Режим "Получить" */}
+          {mode === 'get' && (
+              <div className="space-y-4">
+                <input
+                    type="text"
+                    value={getCode}
+                    onChange={(e) => setGetCode(e.target.value)}
+                    placeholder="Введите код для получения текста"
+                    className="w-full p-4 bg-white text-black border-4 border-black focus:outline-none focus:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] transition-shadow font-bold text-lg uppercase placeholder:text-gray-500 placeholder:normal-case placeholder:font-normal placeholder:text-base"
+                />
+                <button
+                    onClick={handleGet}
+                    disabled={getLoading}
+                    className="w-full py-4 px-6 bg-[#9BF6FF] text-black font-black text-lg uppercase border-4 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-1 hover:-translate-y-1 disabled:bg-gray-400 disabled:cursor-not-allowed disabled:transform-none transition-all active:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-1 active:translate-y-1"
+                >
+                  {getLoading ? 'Загрузка...' : 'Получить текст'}
+                </button>
+                {getError && (
+                    <div className="p-4 bg-[#FF6B6B] border-4 border-black text-center">
+                      <p className="font-bold text-white">{getError}</p>
+                    </div>
+                )}
+                {getText && (
+                    <div className="p-6 bg-[#FFD6A5] border-4 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
+                      <p className="text-sm font-bold text-black mb-3 uppercase tracking-wider">Ваш текст:</p>
+                      <p className="whitespace-pre-wrap text-black font-medium leading-relaxed">
+                        {getText}
+                      </p>
+                    </div>
+                )}
               </div>
-            )}
-          </div>
-        )}
-      </div>
-    </main>
+          )}
+        </div>
+
+        {/* Ссылка внизу */}
+        <a
+            href="#"
+            className="absolute bottom-4 text-sm font-medium text-black opacity-30 hover:opacity-50 transition-opacity underline"
+        >
+          быстрый обменник файлами
+        </a>
+      </main>
   );
 }
