@@ -173,7 +173,7 @@ export default function Home() {
                     value={getCode}
                     onChange={(e) => setGetCode(e.target.value)}
                     placeholder="Введите код для получения текста"
-                    className="w-full p-4 bg-white text-black border-4 border-black focus:outline-none focus:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] transition-shadow font-bold text-lg uppercase placeholder:text-gray-500 placeholder:normal-case placeholder:font-normal placeholder:text-base"
+                    className="w-full p-4 bg-white text-black border-4 border-black focus:outline-none focus:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] transition-shadow font-bold text-lg placeholder:text-gray-500 placeholder:normal-case placeholder:font-normal placeholder:text-base"
                 />
                 <button
                     onClick={handleGet}
