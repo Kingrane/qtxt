@@ -92,7 +92,7 @@ export default function Home() {
           <div className="flex gap-3">
             <button
                 onClick={() => setMode('share')}
-                className={`flex-1 py-3 px-4 font-bold border-4 border-black uppercase tracking-wide transition-all ${
+                className={`flex-1 py-3 px-4 font-bold border-4 border-black tracking-wide transition-all ${
                     mode === 'share'
                         ? 'bg-[#FF6B6B] text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] translate-x-0 translate-y-0'
                         : 'bg-white text-black hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-1 hover:-translate-y-1'
@@ -102,7 +102,7 @@ export default function Home() {
             </button>
             <button
                 onClick={() => setMode('get')}
-                className={`flex-1 py-3 px-4 font-bold border-4 border-black uppercase tracking-wide transition-all ${
+                className={`flex-1 py-3 px-4 font-bold border-4 border-black tracking-wide transition-all ${
                     mode === 'get'
                         ? 'bg-[#9BF6FF] text-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] translate-x-0 translate-y-0'
                         : 'bg-white text-black hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-1 hover:-translate-y-1'
