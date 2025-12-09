@@ -199,6 +199,24 @@ export default function Home() {
           )}
         </div>
 
+        {/* ============= РЕКЛАМНЫЙ БЛОК ============= */}
+        <div className="mt-8 w-full max-w-lg">
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `
+                window.yaContextCb.push(() => {
+                    Ya.Context.AdvManager.render({
+                        "blockId": "R-A-17962443-2",
+                        "type": "floorAd",
+                        "platform": "desktop"
+                    })
+                })
+              `,
+            }}
+          />
+        </div>
+        {/* ========================================== */}
+
         {/* Ссылка внизу */}
         <a
             href="#"
