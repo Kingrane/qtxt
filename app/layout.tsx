@@ -17,7 +17,15 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ru">
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        {/* Yandex.RTB Loader Code */}
+        <Script id="yandex-rtb-loader" strategy="beforeInteractive">
+          {`window.yaContextCb=window.yaContextCb||[]`}
+        </Script>
+        <Script src="https://yandex.ru/ads/system/context.js" async strategy="beforeInteractive" />
+
+        {children}
+      </body>
     </html>
   );
 }
