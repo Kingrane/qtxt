@@ -253,7 +253,7 @@ export default function Home() {
         href="#"
         className="absolute bottom-4 text-sm font-medium text-black opacity-30 hover:opacity-50 transition-opacity underline"
       >
-        пусто тут
+        быстрый обменник файлами
       </a>
     </main>
   );
