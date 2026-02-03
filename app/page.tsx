@@ -9,15 +9,17 @@ export default function Home() {
   const [shareCode, setShareCode] = useState<string | null>(null);
   const [shareLoading, setShareLoading] = useState(false);
   const [shareError, setShareError] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
 
   const [getCode, setGetCode] = useState('');
   const [getText, setGetText] = useState<string | null>(null);
   const [getLoading, setGetLoading] = useState(false);
   const [getError, setGetError] = useState<string | null>(null);
+  const [textCopied, setTextCopied] = useState(false);
 
   const handleShare = async () => {
     if (!shareText.trim()) {
-      setShareError('Текст не может быть пустым');
+      setShareError('Текст не может быть пустым :P');
       return;
     }
     setShareLoading(true);
@@ -32,14 +34,14 @@ export default function Home() {
       });
 
       if (!response.ok) {
-        throw new Error('Не удалось поделиться текстом');
+        throw new Error('Не удалось поделиться текстом :/');
       }
 
       const data = await response.json();
       setShareCode(data.code);
-      setShareText(''); // Очищаем поле после успешной отправки
-    } catch (error: any) {
-      setShareError(error.message);
+      setShareText('');
+    } catch (error) {
+      setShareError(error instanceof Error ? error.message : 'Неизвестная ошибка');
     } finally {
       setShareLoading(false);
     }
@@ -47,7 +49,7 @@ export default function Home() {
 
   const handleGet = async () => {
     if (!getCode.trim()) {
-      setGetError('Код не может быть пустым');
+      setGetError('Код не может быть пустым :P');
       return;
     }
     setGetLoading(true);
@@ -59,98 +61,200 @@ export default function Home() {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || 'Текст не найден или устарел');
+        throw new Error(errorData.error || 'Текст не найден или устарел :(');
       }
 
       const data = await response.json();
       setGetText(data.text);
-      setGetCode(''); // Очищаем поле после получения
-    } catch (error: any) {
-      setGetError(error.message);
+      setGetCode('');
+    } catch (error) {
+      setGetError(error instanceof Error ? error.message : 'Неизвестная ошибка');
     } finally {
       setGetLoading(false);
     }
   };
 
+  const handleCopy = () => {
+    if (shareCode) {
+      navigator.clipboard.writeText(shareCode);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
+  };
+
+  const handleCopyText = () => {
+    if (getText) {
+      navigator.clipboard.writeText(getText);
+      setTextCopied(true);
+      setTimeout(() => setTextCopied(false), 2000);
+    }
+  };
+
   return (
-      <main className="flex min-h-screen flex-col items-center justify-center p-4 bg-gray-50">
-        <div className="w-full max-w-lg p-8 space-y-6 bg-white rounded-xl shadow-lg">
-          <h1 className="text-3xl font-bold text-center text-gray-800">Обменник текстом</h1>
+    <main className="flex min-h-screen flex-col items-center justify-center p-4 bg-[#CAFFBF] relative">
+      <div className="w-full max-w-lg p-8 space-y-6 bg-white border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
+        <h1 className="text-4xl font-black text-center text-black uppercase tracking-tight">
+          qtxt
+        </h1>
 
-          {/* Переключатель режимов */}
-          <div className="flex justify-center p-1 bg-gray-100 rounded-lg">
-            <button
-                onClick={() => setMode('share')}
-                className={`flex-1 py-2 px-4 rounded-md font-medium transition-colors ${
-                    mode === 'share' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-600'
-                }`}
-            >
-              Поделиться
-            </button>
-            <button
-                onClick={() => setMode('get')}
-                className={`flex-1 py-2 px-4 rounded-md font-medium transition-colors ${
-                    mode === 'get' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-600'
-                }`}
-            >
-              Получить
-            </button>
-          </div>
-
-          {/* Режим "Поделиться" */}
-          {mode === 'share' && (
-              <div className="space-y-4">
-            <textarea
-                value={shareText}
-                onChange={(e) => setShareText(e.target.value)}
-                placeholder="Введите ваш текст здесь..."
-                className="w-full h-40 p-3 border border-gray-300 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-                <button
-                    onClick={handleShare}
-                    disabled={shareLoading}
-                    className="w-full py-3 px-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 disabled:bg-gray-400 transition-colors"
-                >
-                  {shareLoading ? 'Создание ссылки...' : 'Поделиться'}
-                </button>
-                {shareError && <p className="text-center text-red-500">{shareError}</p>}
-                {shareCode && (
-                    <div className="p-4 bg-green-50 border border-green-200 rounded-lg text-center">
-                      <p className="text-sm text-gray-600">Ваш код:</p>
-                      <p className="text-2xl font-mono font-bold text-green-700">{shareCode}</p>
-                      <p className="text-xs text-gray-500 mt-2">Скопируйте его. Текст будет удален после прочтения.</p>
-                    </div>
-                )}
-              </div>
-          )}
-
-          {/* Режим "Получить" */}
-          {mode === 'get' && (
-              <div className="space-y-4">
-                <input
-                    type="text"
-                    value={getCode}
-                    onChange={(e) => setGetCode(e.target.value.toUpperCase())}
-                    placeholder="Введите код для получения текста"
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-                <button
-                    onClick={handleGet}
-                    disabled={getLoading}
-                    className="w-full py-3 px-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 disabled:bg-gray-400 transition-colors"
-                >
-                  {getLoading ? 'Загрузка...' : 'Получить текст'}
-                </button>
-                {getError && <p className="text-center text-red-500">{getError}</p>}
-                {getText && (
-                    <div className="p-4 bg-gray-50 border border-gray-200 rounded-lg">
-                      <p className="text-sm text-gray-600 mb-2">Ваш текст:</p>
-                      <p className="whitespace-pre-wrap text-gray-800">{getText}</p>
-                    </div>
-                )}
-              </div>
-          )}
+        {/* Переключатель режимов */}
+        <div className="flex gap-3">
+          <button
+            onClick={() => setMode('share')}
+            className={`flex-1 py-3 px-4 font-bold border-4 border-black tracking-wide transition-all ${mode === 'share'
+              ? 'bg-[#FF6B6B] text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] translate-x-0 translate-y-0'
+              : 'bg-white text-black hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-1 hover:-translate-y-1'
+              }`}
+          >
+            Поделиться
+          </button>
+          <button
+            onClick={() => setMode('get')}
+            className={`flex-1 py-3 px-4 font-bold border-4 border-black tracking-wide transition-all ${mode === 'get'
+              ? 'bg-[#9BF6FF] text-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] translate-x-0 translate-y-0'
+              : 'bg-white text-black hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-1 hover:-translate-y-1'
+              }`}
+          >
+            Получить
+          </button>
         </div>
-      </main>
+
+        {/* Режим "Поделиться" */}
+        {mode === 'share' && (
+          <div className="space-y-4">
+            <textarea
+              value={shareText}
+              onChange={(e) => setShareText(e.target.value)}
+              placeholder="Введите ваш текст здесь..."
+              className="w-full h-40 p-4 bg-white text-black border-4 border-black resize-none focus:outline-none focus:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] transition-shadow font-medium placeholder:text-gray-500 placeholder:font-normal"
+            />
+            <button
+              onClick={handleShare}
+              disabled={shareLoading}
+              className="w-full py-4 px-6 bg-[#FF6B6B] text-white font-black text-lg uppercase border-4 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-1 hover:-translate-y-1 disabled:bg-gray-400 disabled:cursor-not-allowed disabled:transform-none transition-all active:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-1 active:translate-y-1"
+            >
+              {shareLoading ? 'Создание ссылки...' : 'Поделиться'}
+            </button>
+            {shareError && (
+              <div className="p-4 bg-[#FF6B6B] border-4 border-black text-center">
+                <p className="font-bold text-white">{shareError}</p>
+              </div>
+            )}
+            {shareCode && (
+              <div className="p-6 bg-[#FFC6FF] border-4 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-xs font-bold text-black mb-2 uppercase tracking-wider">Ваш код</p>
+                    <p className="text-3xl font-black font-mono text-black break-all">
+                      {shareCode}
+                    </p>
+                  </div>
+                  <button
+                    onClick={handleCopy}
+                    className="p-3 bg-white border-4 border-black hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-1 hover:-translate-y-1 transition-all active:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] active:translate-x-1 active:translate-y-1"
+                  >
+                    {copied ? (
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                      </svg>
+                    ) : (
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+                      </svg>
+                    )}
+                  </button>
+                </div>
+                <p className="text-xs font-bold text-black mt-4 opacity-70">
+                  Текст будет удален через 10 минут.
+                </p>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Режим "Получить" */}
+        {mode === 'get' && (
+          <div className="space-y-4">
+            <input
+              type="text"
+              value={getCode}
+              onChange={(e) => setGetCode(e.target.value)}
+              placeholder="Введите код для получения текста"
+              className="w-full p-4 bg-white text-black border-4 border-black focus:outline-none focus:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] transition-shadow font-bold text-lg placeholder:text-gray-500 placeholder:normal-case placeholder:font-normal placeholder:text-base"
+            />
+            <button
+              onClick={handleGet}
+              disabled={getLoading}
+              className="w-full py-4 px-6 bg-[#9BF6FF] text-black font-black text-lg uppercase border-4 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-1 hover:-translate-y-1 disabled:bg-gray-400 disabled:cursor-not-allowed disabled:transform-none transition-all active:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-1 active:translate-y-1"
+            >
+              {getLoading ? 'Загрузка...' : 'Получить текст'}
+            </button>
+            {getError && (
+              <div className="p-4 bg-[#FF6B6B] border-4 border-black text-center">
+                <p className="font-bold text-white">{getError}</p>
+              </div>
+            )}
+            {getText && (
+              <div className="bg-white border-4 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
+                <div className="flex items-center justify-between px-4 py-3 bg-[#9BF6FF] border-b-4 border-black">
+                  <p className="text-sm font-bold text-black uppercase tracking-wider">Ваш текст</p>
+                  <button
+                    onClick={handleCopyText}
+                    className="flex items-center gap-2 px-3 py-1.5 bg-white border-2 border-black text-sm font-bold hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 transition-all"
+                  >
+                    {textCopied ? (
+                      <>
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                        </svg>
+                        <span className="text-green-600">Скопировано!</span>
+                      </>
+                    ) : (
+                      <>
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+                        </svg>
+                        <span>Скопировать все</span>
+                      </>
+                    )}
+                  </button>
+                </div>
+                <div className="max-h-60 overflow-y-auto p-4 bg-[#FDFFB6]">
+                  <p className="whitespace-pre-wrap text-black font-medium leading-relaxed break-words">
+                    {getText}
+                  </p>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+
+      {/* ============= РЕКЛАМНЫЙ БЛОК ============= */}
+      <div className="mt-8 w-full max-w-lg">
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+                window.yaContextCb.push(() => {
+                    Ya.Context.AdvManager.render({
+                        "blockId": "R-A-17962443-2",
+                        "type": "floorAd",
+                        "platform": "desktop"
+                    })
+                })
+              `,
+          }}
+        />
+      </div>
+      {/* ========================================== */}
+
+      {/* Ссылка внизу */}
+      <a
+        href="#"
+        className="absolute bottom-4 text-sm font-medium text-black opacity-30 hover:opacity-50 transition-opacity underline"
+      >
+        пусто тут
+      </a>
+    </main>
   );
 }

@@ -11,11 +11,9 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ error: 'Текст обязателен' }, { status: 400 });
         }
 
-        const code = nanoid(7); // Генерируем код из 7 символов
+        const code = nanoid(5);
 
-        // Сохраняем текст в KV с кодом как ключ.
-        // { ex: 86400 } - устанавливаем время жизни записи на 24 часа (в секундах)
-        await kv.set(code, text, { ex: 86400 });
+        await kv.set(code, text, { ex: 600 });
 
         return NextResponse.json({ code });
     } catch (error) {
