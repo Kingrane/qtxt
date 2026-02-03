@@ -105,7 +105,7 @@ export default function Home() {
           <button
             onClick={() => setMode('share')}
             className={`flex-1 py-3 px-4 font-bold border-4 border-[#1A1A2E] tracking-wide transition-all ${mode === 'share'
-              ? 'bg-[#E74C3C] text-white shadow-[4px_4px_0px_0px_#1A1A2E] translate-x-0 translate-y-0'
+              ? 'bg-[#FF6B6B] text-[#1A1A2E] shadow-[4px_4px_0px_0px_#1A1A2E] translate-x-0 translate-y-0'
               : 'bg-[#FFFBF0] text-[#1A1A2E] hover:shadow-[4px_4px_0px_0px_#1A1A2E] hover:-translate-x-1 hover:-translate-y-1'
               }`}
           >
@@ -114,7 +114,7 @@ export default function Home() {
           <button
             onClick={() => setMode('get')}
             className={`flex-1 py-3 px-4 font-bold border-4 border-[#1A1A2E] tracking-wide transition-all ${mode === 'get'
-              ? 'bg-[#9B59B6] text-white shadow-[4px_4px_0px_0px_#1A1A2E] translate-x-0 translate-y-0'
+              ? 'bg-[#4ECDC4] text-[#1A1A2E] shadow-[4px_4px_0px_0px_#1A1A2E] translate-x-0 translate-y-0'
               : 'bg-[#FFFBF0] text-[#1A1A2E] hover:shadow-[4px_4px_0px_0px_#1A1A2E] hover:-translate-x-1 hover:-translate-y-1'
               }`}
           >
@@ -126,36 +126,32 @@ export default function Home() {
         {mode === 'share' && (
           <div className="space-y-4">
             {/* Переключатель текст/код */}
-            <div className="flex gap-2">
+            <div className="flex gap-1 justify-end">
               <button
                 onClick={() => setContentMode('text')}
-                className={`flex-1 py-2 px-3 font-bold border-2 border-[#1A1A2E] text-sm transition-all ${
+                className={`p-2 border-2 border-[#1A1A2E] transition-all ${
                   contentMode === 'text'
-                    ? 'bg-[#E74C3C] text-white shadow-[2px_2px_0px_0px_#1A1A2E]'
-                    : 'bg-[#FFFBF0] text-[#1A1A2E] hover:shadow-[2px_2px_0px_0px_#1A1A2E]'
+                    ? 'bg-[#FF6B6B] shadow-[2px_2px_0px_0px_#1A1A2E]'
+                    : 'bg-[#FFFBF0] hover:shadow-[2px_2px_0px_0px_#1A1A2E]'
                 }`}
+                title="Текст"
               >
-                <span className="flex items-center justify-center gap-2">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h7" />
-                  </svg>
-                  Текст
-                </span>
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="#1A1A2E" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h7" />
+                </svg>
               </button>
               <button
                 onClick={() => setContentMode('code')}
-                className={`flex-1 py-2 px-3 font-bold border-2 border-[#1A1A2E] text-sm transition-all ${
+                className={`p-2 border-2 border-[#1A1A2E] transition-all ${
                   contentMode === 'code'
-                    ? 'bg-[#9B59B6] text-white shadow-[2px_2px_0px_0px_#1A1A2E]'
-                    : 'bg-[#FFFBF0] text-[#1A1A2E] hover:shadow-[2px_2px_0px_0px_#1A1A2E]'
+                    ? 'bg-[#4ECDC4] shadow-[2px_2px_0px_0px_#1A1A2E]'
+                    : 'bg-[#FFFBF0] hover:shadow-[2px_2px_0px_0px_#1A1A2E]'
                 }`}
+                title="Код"
               >
-                <span className="flex items-center justify-center gap-2">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
-                  </svg>
-                  Код
-                </span>
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="#1A1A2E" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                </svg>
               </button>
             </div>
             <textarea
@@ -163,12 +159,12 @@ export default function Home() {
               onChange={(e) => setShareText(e.target.value)}
               placeholder={contentMode === 'code' ? "Введите ваш код здесь..." : "Введите ваш текст здесь..."}
               className={`w-full h-40 p-4 bg-[#FFFBF0] text-[#1A1A2E] border-4 border-[#1A1A2E] resize-none focus:outline-none focus:shadow-[6px_6px_0px_0px_#1A1A2E] transition-shadow font-medium placeholder:text-[#6B6B7B] placeholder:font-normal ${contentMode === 'code' ? 'font-mono text-sm' : ''}`}
-              style={{ fontFamily: contentMode === 'code' ? 'var(--font-inter), monospace' : 'inherit' }}
+              style={{ fontFamily: contentMode === 'code' ? 'var(--font-inter), monospace' : 'var(--font-comfortaa), sans-serif' }}
             />
             <button
               onClick={handleShare}
               disabled={shareLoading}
-              className="w-full py-4 px-6 bg-[#E74C3C] text-white font-black text-lg uppercase border-4 border-[#1A1A2E] shadow-[6px_6px_0px_0px_#1A1A2E] hover:shadow-[8px_8px_0px_0px_#1A1A2E] hover:-translate-x-1 hover:-translate-y-1 disabled:bg-[#D1D1D6] disabled:cursor-not-allowed disabled:transform-none transition-all active:shadow-[2px_2px_0px_0px_#1A1A2E] active:translate-x-1 active:translate-y-1"
+              className="w-full py-4 px-6 bg-[#FF6B6B] text-[#1A1A2E] font-black text-lg uppercase border-4 border-[#1A1A2E] shadow-[6px_6px_0px_0px_#1A1A2E] hover:shadow-[8px_8px_0px_0px_#1A1A2E] hover:-translate-x-1 hover:-translate-y-1 disabled:bg-[#D1D1D6] disabled:cursor-not-allowed disabled:transform-none transition-all active:shadow-[2px_2px_0px_0px_#1A1A2E] active:translate-x-1 active:translate-y-1"
             >
               {shareLoading ? 'Создание ссылки...' : 'Поделиться'}
             </button>
@@ -222,7 +218,7 @@ export default function Home() {
             <button
               onClick={handleGet}
               disabled={getLoading}
-              className="w-full py-4 px-6 bg-[#9B59B6] text-white font-black text-lg uppercase border-4 border-[#1A1A2E] shadow-[6px_6px_0px_0px_#1A1A2E] hover:shadow-[8px_8px_0px_0px_#1A1A2E] hover:-translate-x-1 hover:-translate-y-1 disabled:bg-[#D1D1D6] disabled:cursor-not-allowed disabled:transform-none transition-all active:shadow-[2px_2px_0px_0px_#1A1A2E] active:translate-x-1 active:translate-y-1"
+              className="w-full py-4 px-6 bg-[#4ECDC4] text-[#1A1A2E] font-black text-lg uppercase border-4 border-[#1A1A2E] shadow-[6px_6px_0px_0px_#1A1A2E] hover:shadow-[8px_8px_0px_0px_#1A1A2E] hover:-translate-x-1 hover:-translate-y-1 disabled:bg-[#D1D1D6] disabled:cursor-not-allowed disabled:transform-none transition-all active:shadow-[2px_2px_0px_0px_#1A1A2E] active:translate-x-1 active:translate-y-1"
             >
               {getLoading ? 'Загрузка...' : 'Получить текст'}
             </button>
@@ -233,8 +229,8 @@ export default function Home() {
             )}
             {getText && (
               <div className="bg-[#FFFBF0] border-4 border-[#1A1A2E] shadow-[6px_6px_0px_0px_#1A1A2E]">
-                <div className="flex items-center justify-between px-4 py-3 bg-[#9B59B6] border-b-4 border-[#1A1A2E]">
-                  <p className="text-sm font-bold text-white uppercase tracking-wider">Ваш текст</p>
+                <div className="flex items-center justify-between px-4 py-3 bg-[#4ECDC4] border-b-4 border-[#1A1A2E]">
+                  <p className="text-sm font-bold text-[#1A1A2E] uppercase tracking-wider">Ваш текст</p>
                   <button
                     onClick={handleCopyText}
                     className="flex items-center gap-2 px-3 py-1.5 bg-[#FFFBF0] border-2 border-[#1A1A2E] text-sm font-bold text-[#1A1A2E] hover:shadow-[3px_3px_0px_0px_#1A1A2E] hover:-translate-x-0.5 hover:-translate-y-0.5 transition-all"
