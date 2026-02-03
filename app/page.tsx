@@ -3,8 +3,11 @@
 
 import { useState } from 'react';
 
+type ContentMode = 'text' | 'code';
+
 export default function Home() {
   const [mode, setMode] = useState<'share' | 'get'>('share');
+  const [contentMode, setContentMode] = useState<ContentMode>('text');
   const [shareText, setShareText] = useState('');
   const [shareCode, setShareCode] = useState<string | null>(null);
   const [shareLoading, setShareLoading] = useState(false);
@@ -91,8 +94,8 @@ export default function Home() {
   };
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-4 bg-[#F5F0E8] relative">
-      <div className="w-full max-w-lg p-8 space-y-6 bg-[#FAF7F2] border-4 border-[#1A1A2E] shadow-[8px_8px_0px_0px_#1A1A2E]">
+    <main className="flex min-h-screen flex-col items-center justify-center p-4 bg-[#FFF8E1] relative">
+      <div className="w-full max-w-lg p-8 space-y-6 bg-[#FFFBF0] border-4 border-[#1A1A2E] shadow-[8px_8px_0px_0px_#1A1A2E]">
         <h1 className="text-4xl font-black text-center text-[#1A1A2E] uppercase tracking-tight">
           qtxt
         </h1>
@@ -102,8 +105,8 @@ export default function Home() {
           <button
             onClick={() => setMode('share')}
             className={`flex-1 py-3 px-4 font-bold border-4 border-[#1A1A2E] tracking-wide transition-all ${mode === 'share'
-              ? 'bg-[#FF6B9D] text-[#1A1A2E] shadow-[4px_4px_0px_0px_#1A1A2E] translate-x-0 translate-y-0'
-              : 'bg-[#FAF7F2] text-[#1A1A2E] hover:shadow-[4px_4px_0px_0px_#1A1A2E] hover:-translate-x-1 hover:-translate-y-1'
+              ? 'bg-[#E74C3C] text-white shadow-[4px_4px_0px_0px_#1A1A2E] translate-x-0 translate-y-0'
+              : 'bg-[#FFFBF0] text-[#1A1A2E] hover:shadow-[4px_4px_0px_0px_#1A1A2E] hover:-translate-x-1 hover:-translate-y-1'
               }`}
           >
             Поделиться
@@ -111,8 +114,8 @@ export default function Home() {
           <button
             onClick={() => setMode('get')}
             className={`flex-1 py-3 px-4 font-bold border-4 border-[#1A1A2E] tracking-wide transition-all ${mode === 'get'
-              ? 'bg-[#4ECDC4] text-[#1A1A2E] shadow-[4px_4px_0px_0px_#1A1A2E] translate-x-0 translate-y-0'
-              : 'bg-[#FAF7F2] text-[#1A1A2E] hover:shadow-[4px_4px_0px_0px_#1A1A2E] hover:-translate-x-1 hover:-translate-y-1'
+              ? 'bg-[#9B59B6] text-white shadow-[4px_4px_0px_0px_#1A1A2E] translate-x-0 translate-y-0'
+              : 'bg-[#FFFBF0] text-[#1A1A2E] hover:shadow-[4px_4px_0px_0px_#1A1A2E] hover:-translate-x-1 hover:-translate-y-1'
               }`}
           >
             Получить
@@ -122,16 +125,50 @@ export default function Home() {
         {/* Режим "Поделиться" */}
         {mode === 'share' && (
           <div className="space-y-4">
+            {/* Переключатель текст/код */}
+            <div className="flex gap-2">
+              <button
+                onClick={() => setContentMode('text')}
+                className={`flex-1 py-2 px-3 font-bold border-2 border-[#1A1A2E] text-sm transition-all ${
+                  contentMode === 'text'
+                    ? 'bg-[#E74C3C] text-white shadow-[2px_2px_0px_0px_#1A1A2E]'
+                    : 'bg-[#FFFBF0] text-[#1A1A2E] hover:shadow-[2px_2px_0px_0px_#1A1A2E]'
+                }`}
+              >
+                <span className="flex items-center justify-center gap-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h7" />
+                  </svg>
+                  Текст
+                </span>
+              </button>
+              <button
+                onClick={() => setContentMode('code')}
+                className={`flex-1 py-2 px-3 font-bold border-2 border-[#1A1A2E] text-sm transition-all ${
+                  contentMode === 'code'
+                    ? 'bg-[#9B59B6] text-white shadow-[2px_2px_0px_0px_#1A1A2E]'
+                    : 'bg-[#FFFBF0] text-[#1A1A2E] hover:shadow-[2px_2px_0px_0px_#1A1A2E]'
+                }`}
+              >
+                <span className="flex items-center justify-center gap-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                  </svg>
+                  Код
+                </span>
+              </button>
+            </div>
             <textarea
               value={shareText}
               onChange={(e) => setShareText(e.target.value)}
-              placeholder="Введите ваш текст здесь..."
-              className="w-full h-40 p-4 bg-[#FAF7F2] text-[#1A1A2E] border-4 border-[#1A1A2E] resize-none focus:outline-none focus:shadow-[6px_6px_0px_0px_#1A1A2E] transition-shadow font-medium placeholder:text-[#6B6B7B] placeholder:font-normal"
+              placeholder={contentMode === 'code' ? "Введите ваш код здесь..." : "Введите ваш текст здесь..."}
+              className={`w-full h-40 p-4 bg-[#FFFBF0] text-[#1A1A2E] border-4 border-[#1A1A2E] resize-none focus:outline-none focus:shadow-[6px_6px_0px_0px_#1A1A2E] transition-shadow font-medium placeholder:text-[#6B6B7B] placeholder:font-normal ${contentMode === 'code' ? 'font-mono text-sm' : ''}`}
+              style={{ fontFamily: contentMode === 'code' ? 'var(--font-inter), monospace' : 'inherit' }}
             />
             <button
               onClick={handleShare}
               disabled={shareLoading}
-              className="w-full py-4 px-6 bg-[#FF6B9D] text-[#1A1A2E] font-black text-lg uppercase border-4 border-[#1A1A2E] shadow-[6px_6px_0px_0px_#1A1A2E] hover:shadow-[8px_8px_0px_0px_#1A1A2E] hover:-translate-x-1 hover:-translate-y-1 disabled:bg-[#D1D1D6] disabled:cursor-not-allowed disabled:transform-none transition-all active:shadow-[2px_2px_0px_0px_#1A1A2E] active:translate-x-1 active:translate-y-1"
+              className="w-full py-4 px-6 bg-[#E74C3C] text-white font-black text-lg uppercase border-4 border-[#1A1A2E] shadow-[6px_6px_0px_0px_#1A1A2E] hover:shadow-[8px_8px_0px_0px_#1A1A2E] hover:-translate-x-1 hover:-translate-y-1 disabled:bg-[#D1D1D6] disabled:cursor-not-allowed disabled:transform-none transition-all active:shadow-[2px_2px_0px_0px_#1A1A2E] active:translate-x-1 active:translate-y-1"
             >
               {shareLoading ? 'Создание ссылки...' : 'Поделиться'}
             </button>
@@ -145,7 +182,7 @@ export default function Home() {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-xs font-bold text-[#1A1A2E] mb-2 uppercase tracking-wider">Ваш код</p>
-                    <p className="text-3xl font-black font-mono text-[#1A1A2E] break-all">
+                    <p className="text-3xl font-black text-[#1A1A2E] break-all" style={{ fontFamily: 'var(--font-inter), sans-serif' }}>
                       {shareCode}
                     </p>
                   </div>
@@ -180,12 +217,12 @@ export default function Home() {
               value={getCode}
               onChange={(e) => setGetCode(e.target.value)}
               placeholder="Введите код для получения текста"
-              className="w-full p-4 bg-[#FAF7F2] text-[#1A1A2E] border-4 border-[#1A1A2E] focus:outline-none focus:shadow-[6px_6px_0px_0px_#1A1A2E] transition-shadow font-bold text-lg placeholder:text-[#6B6B7B] placeholder:normal-case placeholder:font-normal placeholder:text-base"
+              className="w-full p-4 bg-[#FFFBF0] text-[#1A1A2E] border-4 border-[#1A1A2E] focus:outline-none focus:shadow-[6px_6px_0px_0px_#1A1A2E] transition-shadow font-bold text-lg placeholder:text-[#6B6B7B] placeholder:normal-case placeholder:font-normal placeholder:text-base"
             />
             <button
               onClick={handleGet}
               disabled={getLoading}
-              className="w-full py-4 px-6 bg-[#4ECDC4] text-[#1A1A2E] font-black text-lg uppercase border-4 border-[#1A1A2E] shadow-[6px_6px_0px_0px_#1A1A2E] hover:shadow-[8px_8px_0px_0px_#1A1A2E] hover:-translate-x-1 hover:-translate-y-1 disabled:bg-[#D1D1D6] disabled:cursor-not-allowed disabled:transform-none transition-all active:shadow-[2px_2px_0px_0px_#1A1A2E] active:translate-x-1 active:translate-y-1"
+              className="w-full py-4 px-6 bg-[#9B59B6] text-white font-black text-lg uppercase border-4 border-[#1A1A2E] shadow-[6px_6px_0px_0px_#1A1A2E] hover:shadow-[8px_8px_0px_0px_#1A1A2E] hover:-translate-x-1 hover:-translate-y-1 disabled:bg-[#D1D1D6] disabled:cursor-not-allowed disabled:transform-none transition-all active:shadow-[2px_2px_0px_0px_#1A1A2E] active:translate-x-1 active:translate-y-1"
             >
               {getLoading ? 'Загрузка...' : 'Получить текст'}
             </button>
@@ -195,12 +232,12 @@ export default function Home() {
               </div>
             )}
             {getText && (
-              <div className="bg-[#FAF7F2] border-4 border-[#1A1A2E] shadow-[6px_6px_0px_0px_#1A1A2E]">
-                <div className="flex items-center justify-between px-4 py-3 bg-[#4ECDC4] border-b-4 border-[#1A1A2E]">
-                  <p className="text-sm font-bold text-[#1A1A2E] uppercase tracking-wider">Ваш текст</p>
+              <div className="bg-[#FFFBF0] border-4 border-[#1A1A2E] shadow-[6px_6px_0px_0px_#1A1A2E]">
+                <div className="flex items-center justify-between px-4 py-3 bg-[#9B59B6] border-b-4 border-[#1A1A2E]">
+                  <p className="text-sm font-bold text-white uppercase tracking-wider">Ваш текст</p>
                   <button
                     onClick={handleCopyText}
-                    className="flex items-center gap-2 px-3 py-1.5 bg-[#FAF7F2] border-2 border-[#1A1A2E] text-sm font-bold text-[#1A1A2E] hover:shadow-[3px_3px_0px_0px_#1A1A2E] hover:-translate-x-0.5 hover:-translate-y-0.5 transition-all"
+                    className="flex items-center gap-2 px-3 py-1.5 bg-[#FFFBF0] border-2 border-[#1A1A2E] text-sm font-bold text-[#1A1A2E] hover:shadow-[3px_3px_0px_0px_#1A1A2E] hover:-translate-x-0.5 hover:-translate-y-0.5 transition-all"
                   >
                     {textCopied ? (
                       <>

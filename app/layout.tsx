@@ -1,6 +1,6 @@
 // app/layout.tsx
 import type { Metadata } from 'next';
-import { Comfortaa } from 'next/font/google';
+import { Comfortaa, Inter } from 'next/font/google';
 import Script from 'next/script';
 import './globals.css';
 
@@ -8,6 +8,12 @@ const comfortaa = Comfortaa({
   subsets: ['latin', 'cyrillic'],
   weight: ['400', '500', '600', '700'],
   variable: '--font-comfortaa'
+});
+
+const inter = Inter({
+  subsets: ['latin', 'cyrillic'],
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-inter'
 });
 
 export const metadata: Metadata = {
@@ -22,7 +28,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ru">
-      <body className={comfortaa.className}>
+      <body className={`${comfortaa.className} ${inter.variable}`}>
         {/* Yandex.RTB Loader Code */}
         <Script id="yandex-rtb-loader" strategy="beforeInteractive">
           {`window.yaContextCb=window.yaContextCb||[]`}
