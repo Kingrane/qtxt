@@ -2,8 +2,49 @@
 'use client';
 
 import { useState } from 'react';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { oneLight } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 type ContentMode = 'text' | 'code';
+
+// Функция автоопределения языка
+const detectLanguage = (code: string): string => {
+  if (!code) return 'text';
+  
+  // HTML
+  if (code.includes('<!DOCTYPE') || code.includes('<html') || (code.includes('<') && code.includes('>'))) {
+    return 'html';
+  }
+  // CSS
+  if (code.includes('{') && code.includes('}') && (code.includes(':') || code.includes('@media'))) {
+    return 'css';
+  }
+  // JSON
+  if ((code.trim().startsWith('{') && code.includes('"')) || code.trim().startsWith('[')) {
+    try {
+      JSON.parse(code);
+      return 'json';
+    } catch {}
+  }
+  // Python
+  if (code.includes('def ') || code.includes('import ') || code.includes('print(') || code.includes('class ') && code.includes(':')) {
+    return 'python';
+  }
+  // JavaScript/TypeScript
+  if (code.includes('const ') || code.includes('let ') || code.includes('var ') || code.includes('function') || code.includes('=>')) {
+    return 'typescript';
+  }
+  // SQL
+  if (code.match(/\b(SELECT|INSERT|UPDATE|DELETE|CREATE|DROP)\b/i)) {
+    return 'sql';
+  }
+  // Bash/Shell
+  if (code.includes('#!/bin/bash') || code.includes('echo ') || code.includes('git ')) {
+    return 'bash';
+  }
+  
+  return 'text';
+};
 
 export default function Home() {
   const [mode, setMode] = useState<'share' | 'get'>('share');
@@ -252,10 +293,22 @@ export default function Home() {
                     )}
                   </button>
                 </div>
-                <div className="max-h-60 overflow-y-auto p-4 bg-[#FFF5D6]">
-                  <p className="whitespace-pre-wrap text-[#1A1A2E] font-medium leading-relaxed break-words">
-                    {getText}
-                  </p>
+                <div className="max-h-60 overflow-y-auto bg-[#FFF5D6]">
+                  <SyntaxHighlighter
+                    language={detectLanguage(getText || '')}
+                    style={oneLight}
+                    customStyle={{
+                      margin: 0,
+                      padding: '1rem',
+                      background: 'transparent',
+                      fontSize: '14px',
+                      fontFamily: 'var(--font-inter), monospace',
+                    }}
+                    wrapLines={true}
+                    wrapLongLines={true}
+                  >
+                    {getText || ''}
+                  </SyntaxHighlighter>
                 </div>
               </div>
             )}
