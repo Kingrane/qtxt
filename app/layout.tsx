@@ -1,10 +1,14 @@
 // app/layout.tsx
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
+import { Comfortaa } from 'next/font/google';
 import Script from 'next/script';
 import './globals.css';
 
-const inter = Inter({ subsets: ['latin'] });
+const comfortaa = Comfortaa({ 
+  subsets: ['latin', 'cyrillic'],
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-comfortaa'
+});
 
 export const metadata: Metadata = {
   title: 'qtxt - Обменник текстом',
@@ -18,7 +22,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ru">
-      <body className={inter.className}>
+      <body className={comfortaa.className}>
         {/* Yandex.RTB Loader Code */}
         <Script id="yandex-rtb-loader" strategy="beforeInteractive">
           {`window.yaContextCb=window.yaContextCb||[]`}
