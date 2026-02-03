@@ -166,41 +166,12 @@ export default function Home() {
         {/* Режим "Поделиться" */}
         {mode === 'share' && (
           <div className="space-y-4">
-            {/* Переключатель текст/код */}
-            <div className="flex gap-1 justify-end">
-              <button
-                onClick={() => setContentMode('text')}
-                className={`p-2 border-2 border-[#1A1A2E] transition-all ${
-                  contentMode === 'text'
-                    ? 'bg-[#FF6B6B] shadow-[2px_2px_0px_0px_#1A1A2E]'
-                    : 'bg-[#FFFBF0] hover:shadow-[2px_2px_0px_0px_#1A1A2E]'
-                }`}
-                title="Текст"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="#1A1A2E" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h7" />
-                </svg>
-              </button>
-              <button
-                onClick={() => setContentMode('code')}
-                className={`p-2 border-2 border-[#1A1A2E] transition-all ${
-                  contentMode === 'code'
-                    ? 'bg-[#4ECDC4] shadow-[2px_2px_0px_0px_#1A1A2E]'
-                    : 'bg-[#FFFBF0] hover:shadow-[2px_2px_0px_0px_#1A1A2E]'
-                }`}
-                title="Код"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="#1A1A2E" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
-                </svg>
-              </button>
-            </div>
             <textarea
               value={shareText}
               onChange={(e) => setShareText(e.target.value)}
-              placeholder={contentMode === 'code' ? "Введите ваш код здесь..." : "Введите ваш текст здесь..."}
-              className={`w-full h-40 p-4 bg-[#FFFBF0] text-[#1A1A2E] border-4 border-[#1A1A2E] resize-none focus:outline-none focus:shadow-[6px_6px_0px_0px_#1A1A2E] transition-shadow font-medium placeholder:text-[#6B6B7B] placeholder:font-normal ${contentMode === 'code' ? 'font-mono text-sm' : ''}`}
-              style={{ fontFamily: contentMode === 'code' ? 'var(--font-inter), monospace' : 'var(--font-comfortaa), sans-serif' }}
+              placeholder="Введите ваш текст здесь..."
+              className="w-full h-40 p-4 bg-[#FFFBF0] text-[#1A1A2E] border-4 border-[#1A1A2E] resize-none focus:outline-none focus:shadow-[6px_6px_0px_0px_#1A1A2E] transition-shadow font-medium placeholder:text-[#6B6B7B] placeholder:font-normal"
+              style={{ fontFamily: 'var(--font-inter), sans-serif' }}
             />
             <button
               onClick={handleShare}
