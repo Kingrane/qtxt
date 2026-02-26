@@ -30,9 +30,9 @@ export default function RootLayout({
     <html lang="ru">
       <body className={`${comfortaa.className} ${inter.variable}`}>
         {/* Yandex.RTB Loader Code */}
-        <Script id="yandex-rtb-loader" strategy="beforeInteractive">
-          {`window.yaContextCb=window.yaContextCb||[]`}
-        </Script>
+        <Script id="yandex-rtb-loader" strategy="beforeInteractive" dangerouslySetInnerHTML={{
+          __html: `window.yaContextCb=window.yaContextCb||[]`
+        }} />
         <Script src="https://yandex.ru/ads/system/context.js" async strategy="beforeInteractive" />
 
         {children}
