@@ -4,7 +4,7 @@ import { Comfortaa, Inter } from 'next/font/google';
 import Script from 'next/script';
 import './globals.css';
 
-const comfortaa = Comfortaa({ 
+const comfortaa = Comfortaa({
   subsets: ['latin', 'cyrillic'],
   weight: ['400', '500', '600', '700'],
   variable: '--font-comfortaa'

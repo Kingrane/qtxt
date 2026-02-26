@@ -4,6 +4,7 @@
 import { useState } from 'react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { oneLight } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import confetti from 'canvas-confetti';
 
 type ContentMode = 'text' | 'code';
 type ViewMode = 'plain' | 'highlight';
@@ -93,6 +94,12 @@ export default function Home() {
 
       const data = await response.json();
       setShareCode(data.code);
+      confetti({
+        particleCount: 100,
+        spread: 70,
+        origin: { y: 0.6 },
+        colors: ['#FF6B6B', '#4ECDC4', '#C9B1FF', '#FFE66D'],
+      });
     } catch (error) {
       setShareError(error instanceof Error ? error.message : 'Неизвестная ошибка');
     } finally {
