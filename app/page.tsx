@@ -15,10 +15,12 @@ const highlightCustomStyle = {
     background: 'transparent',
     margin: 0,
     padding: '1rem',
+    fontFamily: 'var(--font-inter), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace',
   },
   'code[class*="language-"]': {
     ...oneLight['code[class*="language-"]'],
     background: 'transparent',
+    fontFamily: 'var(--font-inter), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace',
   },
 };
 
