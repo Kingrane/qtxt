@@ -6,7 +6,6 @@ import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { oneLight } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import confetti from 'canvas-confetti';
 
-type ContentMode = 'text' | 'code';
 type ViewMode = 'plain' | 'highlight';
 
 const highlightCustomStyle = {
@@ -58,13 +57,14 @@ const detectLanguage = (code: string): string => {
 
 export default function Home() {
   const [mode, setMode] = useState<'share' | 'get'>('share');
-  const [contentMode, setContentMode] = useState<ContentMode>('text');
   const [viewMode, setViewMode] = useState<ViewMode>('highlight');
   const [shareText, setShareText] = useState('');
   const [shareCode, setShareCode] = useState<string | null>(null);
   const [shareLoading, setShareLoading] = useState(false);
   const [shareError, setShareError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
+  const [useCustomCode, setUseCustomCode] = useState(false);
+  const [customCode, setCustomCode] = useState('');
 
   const [getCode, setGetCode] = useState('');
   const [getText, setGetText] = useState<string | null>(null);
@@ -85,11 +85,15 @@ export default function Home() {
       const response = await fetch('/api/share', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text: shareText }),
+        body: JSON.stringify({ 
+          text: shareText,
+          customCode: useCustomCode ? (customCode.trim() || undefined) : undefined
+        }),
       });
 
       if (!response.ok) {
-        throw new Error('Не удалось поделиться текстом :/');
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Не удалось поделиться текстом :/');
       }
 
       const data = await response.json();
@@ -127,6 +131,12 @@ export default function Home() {
       const data = await response.json();
       setGetText(data.text);
       setGetCode('');
+      confetti({
+        particleCount: 100,
+        spread: 70,
+        origin: { y: 0.6 },
+        colors: ['#FF6B6B', '#4ECDC4', '#C9B1FF', '#FFE66D'],
+      });
     } catch (error) {
       setGetError(error instanceof Error ? error.message : 'Неизвестная ошибка');
     } finally {
@@ -182,6 +192,36 @@ export default function Home() {
         {/* Режим "Поделиться" */}
         {mode === 'share' && (
           <div className="space-y-4">
+            <div className="flex gap-2">
+              <button
+                onClick={() => setUseCustomCode(false)}
+                className={`flex-1 py-2 px-3 font-bold border-4 border-[#1A1A2E] text-sm transition-all ${!useCustomCode
+                    ? 'bg-[#FF6B6B] text-[#1A1A2E] shadow-[4px_4px_0px_0px_#1A1A2E]'
+                    : 'bg-[#FFFBF0] text-[#1A1A2E] hover:shadow-[4px_4px_0px_0px_#1A1A2E] hover:-translate-x-0.5 hover:-translate-y-0.5'
+                  }`}
+              >
+                Случайный код
+              </button>
+              <button
+                onClick={() => setUseCustomCode(true)}
+                className={`flex-1 py-2 px-3 font-bold border-4 border-[#1A1A2E] text-sm transition-all ${useCustomCode
+                    ? 'bg-[#FF6B6B] text-[#1A1A2E] shadow-[4px_4px_0px_0px_#1A1A2E]'
+                    : 'bg-[#FFFBF0] text-[#1A1A2E] hover:shadow-[4px_4px_0px_0px_#1A1A2E] hover:-translate-x-0.5 hover:-translate-y-0.5'
+                  }`}
+              >
+                Свой код
+              </button>
+            </div>
+            {useCustomCode && (
+              <input
+                type="text"
+                value={customCode}
+                onChange={(e) => setCustomCode(e.target.value)}
+                placeholder="Код (4-10 символов)"
+                maxLength={10}
+                className="w-full p-4 bg-[#FFFBF0] text-[#1A1A2E] border-4 border-[#1A1A2E] focus:outline-none focus:shadow-[6px_6px_0px_0px_#1A1A2E] transition-shadow font-bold placeholder:text-[#6B6B7B]"
+              />
+            )}
             <textarea
               value={shareText}
               onChange={(e) => setShareText(e.target.value)}
