@@ -26,7 +26,7 @@ const highlightCustomStyle = {
 
 const detectLanguage = (code: string): string => {
   if (!code) return 'text';
-  
+
   if (code.includes('<!DOCTYPE') || code.includes('<html') || (code.includes('<') && code.includes('>'))) {
     return 'html';
   }
@@ -37,7 +37,7 @@ const detectLanguage = (code: string): string => {
     try {
       JSON.parse(code);
       return 'json';
-    } catch {}
+    } catch { }
   }
   if (code.includes('def ') || code.includes('import ') || code.includes('print(') || code.includes('class ') && code.includes(':')) {
     return 'python';
@@ -51,7 +51,7 @@ const detectLanguage = (code: string): string => {
   if (code.includes('#!/bin/bash') || code.includes('echo ') || code.includes('git ')) {
     return 'bash';
   }
-  
+
   return 'text';
 };
 
@@ -85,7 +85,7 @@ export default function Home() {
       const response = await fetch('/api/share', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
+        body: JSON.stringify({
           text: shareText,
           customCode: useCustomCode ? (customCode.trim() || undefined) : undefined
         }),
@@ -196,8 +196,8 @@ export default function Home() {
               <button
                 onClick={() => setUseCustomCode(false)}
                 className={`flex-1 py-2 px-3 font-bold border-4 border-[#1A1A2E] text-sm transition-all ${!useCustomCode
-                    ? 'bg-[#FF6B6B] text-[#1A1A2E] shadow-[4px_4px_0px_0px_#1A1A2E]'
-                    : 'bg-[#FFFBF0] text-[#1A1A2E] hover:shadow-[4px_4px_0px_0px_#1A1A2E] hover:-translate-x-0.5 hover:-translate-y-0.5'
+                  ? 'bg-[#FF6B6B] text-[#1A1A2E] shadow-[4px_4px_0px_0px_#1A1A2E]'
+                  : 'bg-[#FFFBF0] text-[#1A1A2E] hover:shadow-[4px_4px_0px_0px_#1A1A2E] hover:-translate-x-0.5 hover:-translate-y-0.5'
                   }`}
               >
                 Случайный код
@@ -205,8 +205,8 @@ export default function Home() {
               <button
                 onClick={() => setUseCustomCode(true)}
                 className={`flex-1 py-2 px-3 font-bold border-4 border-[#1A1A2E] text-sm transition-all ${useCustomCode
-                    ? 'bg-[#FF6B6B] text-[#1A1A2E] shadow-[4px_4px_0px_0px_#1A1A2E]'
-                    : 'bg-[#FFFBF0] text-[#1A1A2E] hover:shadow-[4px_4px_0px_0px_#1A1A2E] hover:-translate-x-0.5 hover:-translate-y-0.5'
+                  ? 'bg-[#FF6B6B] text-[#1A1A2E] shadow-[4px_4px_0px_0px_#1A1A2E]'
+                  : 'bg-[#FFFBF0] text-[#1A1A2E] hover:shadow-[4px_4px_0px_0px_#1A1A2E] hover:-translate-x-0.5 hover:-translate-y-0.5'
                   }`}
               >
                 Свой код
@@ -388,15 +388,6 @@ export default function Home() {
           }}
         />
       </div>
-      {/* ========================================== */}
-
-      {/* Ссылка внизу */}
-      <a
-        href="#"
-        className="absolute bottom-4 text-sm font-medium text-[#1A1A2E] opacity-40 hover:opacity-70 transition-opacity underline"
-      >
-        быстрый обменник файлами
-      </a>
     </main>
   );
 }
