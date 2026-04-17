@@ -1,8 +1,8 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+qtxt: быстрый обмен текстом по короткому коду.
 
-## Getting Started
+## Быстрый старт
 
-First, run the development server:
+Запуск дев-сервера:
 
 ```bash
 npm run dev
@@ -14,11 +14,37 @@ pnpm dev
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Откройте [http://localhost:3000](http://localhost:3000) в браузере.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Редактируйте `app/page.tsx`, изменения применяются автоматически.
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+
+## CLI примеры (curl)
+
+Получить текст по коду:
+
+```bash
+curl -s "https://qqtxt.me/api/get?code=ABCD&format=plain"
+```
+
+Отправить текст (stdin) и получить код:
+
+```bash
+printf "%s" "много строк\nвот так" | curl -s -X POST "https://qqtxt.me/api/share?format=plain" -H "Content-Type: text/plain" --data-binary @-
+```
+
+Отправить файл и получить код:
+
+```bash
+curl -s -X POST "https://qqtxt.me/api/share?format=plain" -H "Content-Type: text/plain" --data-binary @"./file.txt"
+```
+
+Свой код:
+
+```bash
+curl -s -X POST "https://qqtxt.me/api/share?code=MYCODE&format=plain" -H "Content-Type: text/plain" --data-binary @"./file.txt"
+```
 
 ## Learn More
 
