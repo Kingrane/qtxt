@@ -22,6 +22,12 @@ This project uses [`next/font`](https://nextjs.org/docs/app/building-your-applic
 
 ## CLI примеры (curl)
 
+Подсказка по командам:
+
+```bash
+curl -s "https://qqtxt.me/api/help?format=plain"
+```
+
 Получить текст по коду:
 
 ```bash
