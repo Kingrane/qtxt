@@ -108,26 +108,28 @@ export default function Home() {
 
   const isMocha = themeMode === 'mocha';
 
-  const colors = {
-    pageBg: isMocha ? 'bg-[#11111B]' : 'bg-[#FFF8E1]',
-    cardBg: isMocha ? 'bg-[#1E1E2E]' : 'bg-[#FFFBF0]',
-    panelBg: isMocha ? 'bg-[#181825]' : 'bg-[#FFFBF0]',
-    border: isMocha ? 'border-[#11111B]' : 'border-[#1A1A2E]',
-    text: isMocha ? 'text-[#CDD6F4]' : 'text-[#1A1A2E]',
-    placeholder: isMocha ? 'placeholder:text-[#A6ADC8]' : 'placeholder:text-[#6B6B7B]',
-    share: isMocha ? 'bg-[#F38BA8]' : 'bg-[#FF6B6B]',
-    get: isMocha ? 'bg-[#94E2D5]' : 'bg-[#4ECDC4]',
-    purple: isMocha ? 'bg-[#CBA6F7]' : 'bg-[#C9B1FF]',
-    inputBg: isMocha ? 'bg-[#1E1E2E]' : 'bg-[#FFFBF0]',
-    codeBg: isMocha ? 'bg-[#11111B]' : 'bg-[#FFF5D6]',
-    buttonBg: isMocha ? 'bg-[#313244]' : 'bg-[#FAF7F2]',
+  const palette = {
+    pageBg: isMocha ? 'bg-[#11111b]' : 'bg-[#f8f4e8]',
+    panelBg: isMocha ? 'bg-[#1e1e2e]/95' : 'bg-[#fff8ea]/95',
+    cardBg: isMocha ? 'bg-[#1e1e2e]' : 'bg-[#fffaf0]',
+    softBg: isMocha ? 'bg-[#181825]' : 'bg-[#fdf3dd]',
+    border: isMocha ? 'border-[#313244]' : 'border-[#1f2335]',
+    hardBorder: isMocha ? 'border-[#45475a]' : 'border-[#1f2335]',
+    text: isMocha ? 'text-[#cdd6f4]' : 'text-[#1f2335]',
+    textSoft: isMocha ? 'text-[#a6adc8]' : 'text-[#5f6173]',
+    accentShare: isMocha ? 'bg-[#f38ba8]' : 'bg-[#ff6b6b]',
+    accentGet: isMocha ? 'bg-[#94e2d5]' : 'bg-[#4ecdc4]',
+    accentAlt: isMocha ? 'bg-[#cba6f7]' : 'bg-[#c9b1ff]',
+    shadow: isMocha ? '#0b0b12' : '#1f2335',
+    inputBg: isMocha ? 'bg-[#181825]' : 'bg-[#fff8ea]',
+    codeBg: isMocha ? 'bg-[#11111b]' : 'bg-[#fff1cd]',
+    okText: 'text-[#11111b]',
+    error: isMocha ? 'bg-[#f2a7b8]' : 'bg-[#ff7f7f]',
   };
 
   const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-    if (!file) {
-      return;
-    }
+    if (!file) return;
 
     if (file.size > MAX_FILE_BYTES) {
       setShareError('Файл слишком большой. Максимум 20KB.');
@@ -155,6 +157,7 @@ export default function Home() {
       setShareError(inputMode === 'file' ? 'Сначала выбери файл :P' : 'Текст не может быть пустым :P');
       return;
     }
+
     setShareLoading(true);
     setShareError(null);
     setShareCode(null);
@@ -177,10 +180,10 @@ export default function Home() {
       const data = await response.json();
       setShareCode(data.code);
       confetti({
-        particleCount: 100,
-        spread: 70,
-        origin: { y: 0.6 },
-        colors: isMocha ? ['#F38BA8', '#94E2D5', '#CBA6F7', '#F9E2AF'] : ['#FF6B6B', '#4ECDC4', '#C9B1FF', '#FFE66D'],
+        particleCount: 110,
+        spread: 68,
+        origin: { y: 0.64 },
+        colors: isMocha ? ['#f38ba8', '#94e2d5', '#cba6f7', '#f9e2af'] : ['#ff6b6b', '#4ecdc4', '#c9b1ff', '#ffe66d'],
       });
     } catch (error) {
       setShareError(error instanceof Error ? error.message : 'Неизвестная ошибка');
@@ -194,6 +197,7 @@ export default function Home() {
       setGetError('Код не может быть пустым :P');
       return;
     }
+
     setGetLoading(true);
     setGetError(null);
     setGetText(null);
@@ -210,10 +214,10 @@ export default function Home() {
       setGetText(data.text);
       setGetCode('');
       confetti({
-        particleCount: 100,
-        spread: 70,
-        origin: { y: 0.6 },
-        colors: isMocha ? ['#F38BA8', '#94E2D5', '#CBA6F7', '#F9E2AF'] : ['#FF6B6B', '#4ECDC4', '#C9B1FF', '#FFE66D'],
+        particleCount: 110,
+        spread: 68,
+        origin: { y: 0.64 },
+        colors: isMocha ? ['#f38ba8', '#94e2d5', '#cba6f7', '#f9e2af'] : ['#ff6b6b', '#4ecdc4', '#c9b1ff', '#ffe66d'],
       });
     } catch (error) {
       setGetError(error instanceof Error ? error.message : 'Неизвестная ошибка');
@@ -223,36 +227,40 @@ export default function Home() {
   };
 
   const handleCopy = () => {
-    if (shareCode) {
-      navigator.clipboard.writeText(shareCode);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    }
+    if (!shareCode) return;
+    navigator.clipboard.writeText(shareCode);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   };
 
   const handleCopyText = () => {
-    if (getText) {
-      navigator.clipboard.writeText(getText);
-      setTextCopied(true);
-      setTimeout(() => setTextCopied(false), 2000);
-    }
+    if (!getText) return;
+    navigator.clipboard.writeText(getText);
+    setTextCopied(true);
+    setTimeout(() => setTextCopied(false), 2000);
   };
 
   return (
-    <main className={`flex min-h-screen flex-col items-center justify-center p-4 pt-20 sm:pt-24 relative ${colors.pageBg}`}>
+    <main className={`relative flex min-h-screen flex-col items-center justify-center overflow-hidden p-4 pt-24 sm:pt-28 ${palette.pageBg}`}>
+      <div className="pointer-events-none absolute inset-0">
+        <div className={`absolute -left-16 top-10 h-56 w-56 rounded-full blur-3xl ${isMocha ? 'bg-[#94e2d54d]' : 'bg-[#4ecdc44d]'}`} />
+        <div className={`absolute -right-20 bottom-12 h-64 w-64 rounded-full blur-3xl ${isMocha ? 'bg-[#cba6f74d]' : 'bg-[#c9b1ff4d]'}`} />
+        <div className={`absolute left-1/2 top-1/3 h-36 w-36 -translate-x-1/2 rounded-full blur-2xl ${isMocha ? 'bg-[#f9e2af33]' : 'bg-[#ffe66d40]'}`} />
+      </div>
+
       <header className="fixed left-1/2 top-3 z-40 -translate-x-1/2">
         <div
-          className={`flex items-center gap-1 rounded-sm p-1 border-4 ${colors.border} ${colors.panelBg} shadow-[6px_6px_0px_0px_var(--shadow-color)] max-w-[calc(100vw-16px)]`}
-          style={{ ['--shadow-color' as string]: isMocha ? '#11111B' : '#1A1A2E' }}
+          className={`flex items-center gap-1 rounded-xl border-2 p-1 backdrop-blur ${palette.panelBg} ${palette.border} shadow-[0_8px_18px_0_var(--shadow-color)]`}
+          style={{ ['--shadow-color' as string]: `${palette.shadow}66` }}
         >
           <button
             onClick={() => setInputMode('text')}
             title="Текст"
             aria-label="Режим текста"
-            className={`inline-flex h-8 w-8 items-center justify-center font-black border-2 ${colors.border} transition-all sm:h-9 sm:w-9 ${inputMode === 'text' ? `${colors.share} ${isMocha ? 'text-[#11111B]' : 'text-[#1A1A2E]'} shadow-[2px_2px_0px_0px_var(--shadow-color)]` : `${colors.panelBg} ${colors.text} hover:shadow-[2px_2px_0px_0px_var(--shadow-color)] hover:-translate-x-0.5 hover:-translate-y-0.5`}`}
-            style={{ ['--shadow-color' as string]: isMocha ? '#11111B' : '#1A1A2E' }}
+            className={`inline-flex h-9 w-9 items-center justify-center rounded-lg border-2 transition-all ${palette.hardBorder} ${inputMode === 'text' ? `${palette.accentShare} ${palette.okText} shadow-[2px_2px_0px_0px_var(--shadow-color)]` : `${palette.softBg} ${palette.text} hover:-translate-y-0.5 hover:shadow-[2px_2px_0px_0px_var(--shadow-color)]`}`}
+            style={{ ['--shadow-color' as string]: palette.shadow }}
           >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.3">
               <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h10" />
             </svg>
           </button>
@@ -260,10 +268,10 @@ export default function Home() {
             onClick={() => setInputMode('file')}
             title="Файлы"
             aria-label="Режим файлов"
-            className={`inline-flex h-8 w-8 items-center justify-center font-black border-2 ${colors.border} transition-all sm:h-9 sm:w-9 ${inputMode === 'file' ? `${colors.get} text-[#11111B] shadow-[2px_2px_0px_0px_var(--shadow-color)]` : `${colors.panelBg} ${colors.text} hover:shadow-[2px_2px_0px_0px_var(--shadow-color)] hover:-translate-x-0.5 hover:-translate-y-0.5`}`}
-            style={{ ['--shadow-color' as string]: isMocha ? '#11111B' : '#1A1A2E' }}
+            className={`inline-flex h-9 w-9 items-center justify-center rounded-lg border-2 transition-all ${palette.hardBorder} ${inputMode === 'file' ? `${palette.accentGet} ${palette.okText} shadow-[2px_2px_0px_0px_var(--shadow-color)]` : `${palette.softBg} ${palette.text} hover:-translate-y-0.5 hover:shadow-[2px_2px_0px_0px_var(--shadow-color)]`}`}
+            style={{ ['--shadow-color' as string]: palette.shadow }}
           >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.3">
               <path strokeLinecap="round" strokeLinejoin="round" d="M3 7a2 2 0 012-2h5l2 2h7a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V7z" />
             </svg>
           </button>
@@ -271,15 +279,15 @@ export default function Home() {
             onClick={() => setThemeMode((currentTheme) => currentTheme === 'light' ? 'mocha' : 'light')}
             title={isMocha ? 'Светлая тема' : 'Темная тема'}
             aria-label={isMocha ? 'Включить светлую тему' : 'Включить темную тему'}
-            className={`inline-flex h-8 w-8 items-center justify-center font-black border-2 ${colors.border} transition-all sm:h-9 sm:w-9 ${colors.purple} text-[#11111B] hover:shadow-[2px_2px_0px_0px_var(--shadow-color)] hover:-translate-x-0.5 hover:-translate-y-0.5`}
-            style={{ ['--shadow-color' as string]: isMocha ? '#11111B' : '#1A1A2E' }}
+            className={`inline-flex h-9 w-9 items-center justify-center rounded-lg border-2 transition-all ${palette.hardBorder} ${palette.accentAlt} ${palette.okText} hover:-translate-y-0.5 hover:shadow-[2px_2px_0px_0px_var(--shadow-color)]`}
+            style={{ ['--shadow-color' as string]: palette.shadow }}
           >
             {isMocha ? (
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.3">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v2m0 14v2m9-9h-2M5 12H3m15.36 6.36l-1.41-1.41M7.05 7.05L5.64 5.64m12.72 0l-1.41 1.41M7.05 16.95l-1.41 1.41M12 16a4 4 0 100-8 4 4 0 000 8z" />
               </svg>
             ) : (
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.3">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M21 12.79A9 9 0 1111.21 3a7 7 0 009.79 9.79z" />
               </svg>
             )}
@@ -288,64 +296,55 @@ export default function Home() {
             onClick={() => setShowAbout(true)}
             title="Инфо"
             aria-label="О сервисе"
-            className={`inline-flex h-8 w-8 items-center justify-center font-black border-2 ${colors.border} transition-all sm:h-9 sm:w-9 ${colors.panelBg} ${colors.text} hover:shadow-[2px_2px_0px_0px_var(--shadow-color)] hover:-translate-x-0.5 hover:-translate-y-0.5`}
-            style={{ ['--shadow-color' as string]: isMocha ? '#11111B' : '#1A1A2E' }}
+            className={`inline-flex h-9 w-9 items-center justify-center rounded-lg border-2 transition-all ${palette.hardBorder} ${palette.softBg} ${palette.text} hover:-translate-y-0.5 hover:shadow-[2px_2px_0px_0px_var(--shadow-color)]`}
+            style={{ ['--shadow-color' as string]: palette.shadow }}
           >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.3">
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 16v-4M12 8h.01M22 12a10 10 0 11-20 0 10 10 0 0120 0z" />
             </svg>
           </button>
         </div>
       </header>
 
-      <div className={`w-full max-w-lg p-8 space-y-6 ${colors.cardBg} border-4 ${colors.border} shadow-[8px_8px_0px_0px_var(--shadow-color)]`} style={{ ['--shadow-color' as string]: isMocha ? '#11111B' : '#1A1A2E' }}>
-        <h1 className={`text-4xl font-black text-center uppercase tracking-tight ${colors.text}`}>
-          qtxt
-        </h1>
+      <section
+        className={`relative w-full max-w-xl rounded-[1.6rem] border-2 p-5 sm:p-8 ${palette.border} ${palette.cardBg} shadow-[0_18px_40px_0_var(--shadow-color)]`}
+        style={{ ['--shadow-color' as string]: `${palette.shadow}99` }}
+      >
+        <div className={`absolute left-5 right-5 top-0 h-px ${isMocha ? 'bg-[#f9e2af66]' : 'bg-[#ff6b6b66]'}`} />
+        <h1 className={`text-center text-4xl font-black uppercase tracking-tight sm:text-5xl ${palette.text}`}>qtxt</h1>
+        <p className={`mt-2 text-center text-sm font-semibold ${palette.textSoft}`}>ввел код -&gt; получил текст</p>
 
-        <div className="flex gap-3">
+        <div className="mt-6 flex gap-3">
           <button
             onClick={() => setMode('share')}
-            className={`flex-1 py-3 px-4 font-bold border-4 ${colors.border} tracking-wide transition-all ${mode === 'share'
-              ? `${colors.share} text-[#11111B] shadow-[4px_4px_0px_0px_var(--shadow-color)]`
-              : `${colors.cardBg} ${colors.text} hover:shadow-[4px_4px_0px_0px_var(--shadow-color)] hover:-translate-x-1 hover:-translate-y-1`
-              }`}
-            style={{ ['--shadow-color' as string]: isMocha ? '#11111B' : '#1A1A2E' }}
+            className={`flex-1 rounded-xl border-2 px-3 py-3 text-base font-black tracking-wide transition-all ${palette.hardBorder} ${mode === 'share' ? `${palette.accentShare} ${palette.okText} shadow-[3px_3px_0px_0px_var(--shadow-color)]` : `${palette.softBg} ${palette.text} hover:-translate-y-0.5 hover:shadow-[3px_3px_0px_0px_var(--shadow-color)]`}`}
+            style={{ ['--shadow-color' as string]: palette.shadow }}
           >
             Поделиться
           </button>
           <button
             onClick={() => setMode('get')}
-            className={`flex-1 py-3 px-4 font-bold border-4 ${colors.border} tracking-wide transition-all ${mode === 'get'
-              ? `${colors.get} text-[#11111B] shadow-[4px_4px_0px_0px_var(--shadow-color)]`
-              : `${colors.cardBg} ${colors.text} hover:shadow-[4px_4px_0px_0px_var(--shadow-color)] hover:-translate-x-1 hover:-translate-y-1`
-              }`}
-            style={{ ['--shadow-color' as string]: isMocha ? '#11111B' : '#1A1A2E' }}
+            className={`flex-1 rounded-xl border-2 px-3 py-3 text-base font-black tracking-wide transition-all ${palette.hardBorder} ${mode === 'get' ? `${palette.accentGet} ${palette.okText} shadow-[3px_3px_0px_0px_var(--shadow-color)]` : `${palette.softBg} ${palette.text} hover:-translate-y-0.5 hover:shadow-[3px_3px_0px_0px_var(--shadow-color)]`}`}
+            style={{ ['--shadow-color' as string]: palette.shadow }}
           >
             Получить
           </button>
         </div>
 
         {mode === 'share' && (
-          <div className="space-y-4">
+          <div className="mt-5 space-y-4">
             <div className="flex gap-2">
               <button
                 onClick={() => setUseCustomCode(false)}
-                className={`flex-1 py-2 px-3 font-bold border-4 ${colors.border} text-sm transition-all ${!useCustomCode
-                  ? `${colors.share} text-[#11111B] shadow-[4px_4px_0px_0px_var(--shadow-color)]`
-                  : `${colors.cardBg} ${colors.text} hover:shadow-[4px_4px_0px_0px_var(--shadow-color)] hover:-translate-x-0.5 hover:-translate-y-0.5`
-                  }`}
-                style={{ ['--shadow-color' as string]: isMocha ? '#11111B' : '#1A1A2E' }}
+                className={`flex-1 rounded-lg border-2 px-3 py-2 text-sm font-bold transition-all ${palette.hardBorder} ${!useCustomCode ? `${palette.accentShare} ${palette.okText} shadow-[2px_2px_0px_0px_var(--shadow-color)]` : `${palette.softBg} ${palette.text} hover:-translate-y-0.5 hover:shadow-[2px_2px_0px_0px_var(--shadow-color)]`}`}
+                style={{ ['--shadow-color' as string]: palette.shadow }}
               >
                 Случайный код
               </button>
               <button
                 onClick={() => setUseCustomCode(true)}
-                className={`flex-1 py-2 px-3 font-bold border-4 ${colors.border} text-sm transition-all ${useCustomCode
-                  ? `${colors.share} text-[#11111B] shadow-[4px_4px_0px_0px_var(--shadow-color)]`
-                  : `${colors.cardBg} ${colors.text} hover:shadow-[4px_4px_0px_0px_var(--shadow-color)] hover:-translate-x-0.5 hover:-translate-y-0.5`
-                  }`}
-                style={{ ['--shadow-color' as string]: isMocha ? '#11111B' : '#1A1A2E' }}
+                className={`flex-1 rounded-lg border-2 px-3 py-2 text-sm font-bold transition-all ${palette.hardBorder} ${useCustomCode ? `${palette.accentShare} ${palette.okText} shadow-[2px_2px_0px_0px_var(--shadow-color)]` : `${palette.softBg} ${palette.text} hover:-translate-y-0.5 hover:shadow-[2px_2px_0px_0px_var(--shadow-color)]`}`}
+                style={{ ['--shadow-color' as string]: palette.shadow }}
               >
                 Свой код
               </button>
@@ -358,8 +357,8 @@ export default function Home() {
                 onChange={(event) => setCustomCode(event.target.value)}
                 placeholder="Код (4-10 символов)"
                 maxLength={10}
-                className={`w-full p-4 ${colors.inputBg} ${colors.text} border-4 ${colors.border} focus:outline-none focus:shadow-[6px_6px_0px_0px_var(--shadow-color)] transition-shadow font-bold ${colors.placeholder}`}
-                style={{ ['--shadow-color' as string]: isMocha ? '#11111B' : '#1A1A2E' }}
+                className={`w-full rounded-lg border-2 p-4 text-base font-bold outline-none transition-all ${palette.inputBg} ${palette.text} ${palette.hardBorder} placeholder:font-medium placeholder:${isMocha ? '[#8f95b2]' : '[#71768f]'} focus:-translate-y-0.5 focus:shadow-[4px_4px_0px_0px_var(--shadow-color)]`}
+                style={{ ['--shadow-color' as string]: palette.shadow }}
               />
             )}
 
@@ -368,113 +367,111 @@ export default function Home() {
                 value={shareText}
                 onChange={(event) => setShareText(event.target.value)}
                 placeholder="Введите ваш текст здесь..."
-                className={`w-full h-40 p-4 ${colors.inputBg} ${colors.text} border-4 ${colors.border} resize-none focus:outline-none focus:shadow-[6px_6px_0px_0px_var(--shadow-color)] transition-shadow font-medium ${colors.placeholder} placeholder:font-normal`}
+                className={`h-44 w-full resize-none rounded-lg border-2 p-4 text-sm font-medium outline-none transition-all ${palette.inputBg} ${palette.text} ${palette.hardBorder} placeholder:font-normal placeholder:${isMocha ? '[#8f95b2]' : '[#71768f]'} focus:-translate-y-0.5 focus:shadow-[4px_4px_0px_0px_var(--shadow-color)]`}
                 style={{
-                  ['--shadow-color' as string]: isMocha ? '#11111B' : '#1A1A2E',
+                  ['--shadow-color' as string]: palette.shadow,
                   fontFamily: 'var(--font-inter), sans-serif',
                 }}
               />
             ) : (
-              <div className={`p-4 ${colors.inputBg} border-4 border-dashed ${colors.border}`}>
-                <label className={`block text-sm font-bold ${colors.text}`}>
-                  Выбери текстовый файл (до 20KB)
-                </label>
-                <input type="file" onChange={handleFileChange} className={`mt-3 w-full text-sm ${colors.text}`} />
-                {selectedFileName && (
-                  <p className={`mt-3 text-sm font-bold ${colors.text}`}>Файл: {selectedFileName}</p>
-                )}
+              <div className={`rounded-lg border-2 border-dashed p-4 ${palette.hardBorder} ${palette.inputBg}`}>
+                <label className={`block text-sm font-bold ${palette.text}`}>Выбери текстовый файл (до 20KB)</label>
+                <input type="file" onChange={handleFileChange} className={`mt-3 w-full text-sm ${palette.text}`} />
+                {selectedFileName && <p className={`mt-3 text-sm font-bold ${palette.text}`}>Файл: {selectedFileName}</p>}
               </div>
             )}
 
             <button
               onClick={handleShare}
               disabled={shareLoading}
-              className={`w-full py-4 px-6 ${colors.share} text-[#11111B] font-black text-lg uppercase border-4 ${colors.border} shadow-[6px_6px_0px_0px_var(--shadow-color)] hover:shadow-[8px_8px_0px_0px_var(--shadow-color)] hover:-translate-x-1 hover:-translate-y-1 disabled:bg-[#7f849c] disabled:cursor-not-allowed disabled:transform-none transition-all active:shadow-[2px_2px_0px_0px_var(--shadow-color)] active:translate-x-1 active:translate-y-1`}
-              style={{ ['--shadow-color' as string]: isMocha ? '#11111B' : '#1A1A2E' }}
+              className={`w-full rounded-xl border-2 px-5 py-4 text-xl font-black uppercase tracking-wide transition-all ${palette.accentShare} ${palette.okText} ${palette.hardBorder} shadow-[4px_4px_0px_0px_var(--shadow-color)] hover:-translate-y-0.5 hover:shadow-[6px_6px_0px_0px_var(--shadow-color)] disabled:translate-y-0 disabled:cursor-not-allowed disabled:opacity-70 disabled:shadow-none`}
+              style={{ ['--shadow-color' as string]: palette.shadow }}
             >
               {shareLoading ? 'Создание ссылки...' : 'Поделиться'}
             </button>
 
             {shareError && (
-              <div className={`p-4 ${isMocha ? 'bg-[#EBA0AC]' : 'bg-[#FF6B6B]'} border-4 ${colors.border} text-center`}>
-                <p className="font-bold text-[#11111B]">{shareError}</p>
+              <div className={`rounded-lg border-2 p-3 text-center ${palette.error} ${palette.hardBorder}`}>
+                <p className="text-sm font-bold text-[#11111b]">{shareError}</p>
               </div>
             )}
 
             {shareCode && (
-              <div className={`p-6 ${colors.purple} border-4 ${colors.border} shadow-[6px_6px_0px_0px_var(--shadow-color)]`} style={{ ['--shadow-color' as string]: isMocha ? '#11111B' : '#1A1A2E' }}>
-                <div className="flex items-center justify-between">
+              <div
+                className={`rounded-xl border-2 p-5 ${palette.accentAlt} ${palette.hardBorder} shadow-[4px_4px_0px_0px_var(--shadow-color)]`}
+                style={{ ['--shadow-color' as string]: palette.shadow }}
+              >
+                <div className="flex items-center justify-between gap-3">
                   <div>
-                    <p className="text-xs font-bold text-[#11111B] mb-2 uppercase tracking-wider">Ваш код</p>
-                    <p className="text-3xl font-black text-[#11111B] break-all" style={{ fontFamily: 'var(--font-inter), sans-serif' }}>
+                    <p className="mb-2 text-xs font-bold uppercase tracking-[0.2em] text-[#11111b]">Ваш код</p>
+                    <p className="break-all text-3xl font-black text-[#11111b]" style={{ fontFamily: 'var(--font-inter), sans-serif' }}>
                       {shareCode}
                     </p>
                   </div>
                   <button
                     onClick={handleCopy}
-                    className={`p-3 ${colors.buttonBg} border-4 ${colors.border} hover:shadow-[4px_4px_0px_0px_var(--shadow-color)] hover:-translate-x-1 hover:-translate-y-1 transition-all active:shadow-[1px_1px_0px_0px_var(--shadow-color)] active:translate-x-1 active:translate-y-1`}
-                    style={{ ['--shadow-color' as string]: isMocha ? '#11111B' : '#1A1A2E' }}
+                    className={`rounded-lg border-2 px-3 py-2 text-sm font-black transition-all ${palette.softBg} ${palette.hardBorder} text-[#11111b] hover:-translate-y-0.5 hover:shadow-[2px_2px_0px_0px_var(--shadow-color)]`}
+                    style={{ ['--shadow-color' as string]: palette.shadow }}
                   >
-                    {copied ? (
-                      <span className="text-sm font-bold text-[#11111B]">OK</span>
-                    ) : (
-                      <span className="text-sm font-bold text-[#11111B]">Копировать</span>
-                    )}
+                    {copied ? 'OK' : 'Копировать'}
                   </button>
                 </div>
-                <p className="text-xs font-bold text-[#11111B] mt-4 opacity-80">
-                  Текст будет удален через 10 минут.
-                </p>
+                <p className="mt-4 text-xs font-bold tracking-wider text-[#11111b] opacity-80">Текст будет удален через 10 минут.</p>
               </div>
             )}
           </div>
         )}
 
         {mode === 'get' && (
-          <div className="space-y-4">
+          <div className="mt-5 space-y-4">
             <input
               type="text"
               value={getCode}
               onChange={(event) => setGetCode(event.target.value)}
               placeholder="Введите код для получения текста"
-              className={`w-full p-4 ${colors.inputBg} ${colors.text} border-4 ${colors.border} focus:outline-none focus:shadow-[6px_6px_0px_0px_var(--shadow-color)] transition-shadow font-bold text-lg ${colors.placeholder} placeholder:normal-case placeholder:font-normal placeholder:text-base`}
-              style={{ ['--shadow-color' as string]: isMocha ? '#11111B' : '#1A1A2E' }}
+              className={`w-full rounded-lg border-2 p-4 text-lg font-bold outline-none transition-all ${palette.inputBg} ${palette.text} ${palette.hardBorder} placeholder:font-normal placeholder:${isMocha ? '[#8f95b2]' : '[#71768f]'} focus:-translate-y-0.5 focus:shadow-[4px_4px_0px_0px_var(--shadow-color)]`}
+              style={{ ['--shadow-color' as string]: palette.shadow }}
             />
             <button
               onClick={handleGet}
               disabled={getLoading}
-              className={`w-full py-4 px-6 ${colors.get} text-[#11111B] font-black text-lg uppercase border-4 ${colors.border} shadow-[6px_6px_0px_0px_var(--shadow-color)] hover:shadow-[8px_8px_0px_0px_var(--shadow-color)] hover:-translate-x-1 hover:-translate-y-1 disabled:bg-[#7f849c] disabled:cursor-not-allowed disabled:transform-none transition-all active:shadow-[2px_2px_0px_0px_var(--shadow-color)] active:translate-x-1 active:translate-y-1`}
-              style={{ ['--shadow-color' as string]: isMocha ? '#11111B' : '#1A1A2E' }}
+              className={`w-full rounded-xl border-2 px-5 py-4 text-xl font-black uppercase tracking-wide transition-all ${palette.accentGet} ${palette.okText} ${palette.hardBorder} shadow-[4px_4px_0px_0px_var(--shadow-color)] hover:-translate-y-0.5 hover:shadow-[6px_6px_0px_0px_var(--shadow-color)] disabled:translate-y-0 disabled:cursor-not-allowed disabled:opacity-70 disabled:shadow-none`}
+              style={{ ['--shadow-color' as string]: palette.shadow }}
             >
               {getLoading ? 'Загрузка...' : 'Получить текст'}
             </button>
+
             {getError && (
-              <div className={`p-4 ${isMocha ? 'bg-[#EBA0AC]' : 'bg-[#FF6B6B]'} border-4 ${colors.border} text-center`}>
-                <p className="font-bold text-[#11111B]">{getError}</p>
+              <div className={`rounded-lg border-2 p-3 text-center ${palette.error} ${palette.hardBorder}`}>
+                <p className="text-sm font-bold text-[#11111b]">{getError}</p>
               </div>
             )}
+
             {getText && (
-              <div className={`${colors.inputBg} border-4 ${colors.border} shadow-[6px_6px_0px_0px_var(--shadow-color)]`} style={{ ['--shadow-color' as string]: isMocha ? '#11111B' : '#1A1A2E' }}>
-                <div className={`flex items-center justify-between px-4 py-3 ${colors.get} border-b-4 ${colors.border}`}>
-                  <p className="text-sm font-bold text-[#11111B] uppercase tracking-wider">Ваш текст</p>
+              <div
+                className={`overflow-hidden rounded-xl border-2 ${palette.inputBg} ${palette.hardBorder} shadow-[4px_4px_0px_0px_var(--shadow-color)]`}
+                style={{ ['--shadow-color' as string]: palette.shadow }}
+              >
+                <div className={`flex flex-wrap items-center justify-between gap-2 border-b-2 px-4 py-3 ${palette.accentGet} ${palette.hardBorder}`}>
+                  <p className="text-sm font-black uppercase tracking-[0.14em] text-[#11111b]">Ваш текст</p>
                   <div className="flex items-center gap-2">
                     <button
                       onClick={() => setViewMode(viewMode === 'highlight' ? 'plain' : 'highlight')}
-                      className={`flex items-center gap-1 px-3 py-1.5 ${colors.buttonBg} border-2 ${colors.border} text-sm font-bold text-[#11111B] hover:shadow-[3px_3px_0px_0px_var(--shadow-color)] hover:-translate-x-0.5 hover:-translate-y-0.5 transition-all`}
-                      style={{ ['--shadow-color' as string]: isMocha ? '#11111B' : '#1A1A2E' }}
+                      className={`rounded-lg border-2 px-3 py-1.5 text-sm font-bold text-[#11111b] transition-all ${palette.softBg} ${palette.hardBorder} hover:-translate-y-0.5 hover:shadow-[2px_2px_0px_0px_var(--shadow-color)]`}
+                      style={{ ['--shadow-color' as string]: palette.shadow }}
                     >
-                      <span>{viewMode === 'highlight' ? 'Обычный' : 'Подсветка'}</span>
+                      {viewMode === 'highlight' ? 'Обычный' : 'Подсветка'}
                     </button>
                     <button
                       onClick={handleCopyText}
-                      className={`flex items-center gap-2 px-3 py-1.5 ${colors.buttonBg} border-2 ${colors.border} text-sm font-bold text-[#11111B] hover:shadow-[3px_3px_0px_0px_var(--shadow-color)] hover:-translate-x-0.5 hover:-translate-y-0.5 transition-all`}
-                      style={{ ['--shadow-color' as string]: isMocha ? '#11111B' : '#1A1A2E' }}
+                      className={`rounded-lg border-2 px-3 py-1.5 text-sm font-bold text-[#11111b] transition-all ${palette.softBg} ${palette.hardBorder} hover:-translate-y-0.5 hover:shadow-[2px_2px_0px_0px_var(--shadow-color)]`}
+                      style={{ ['--shadow-color' as string]: palette.shadow }}
                     >
-                      <span>{textCopied ? 'Скопировано!' : 'Копировать'}</span>
+                      {textCopied ? 'Скопировано!' : 'Копировать'}
                     </button>
                   </div>
                 </div>
-                <div className={`max-h-60 overflow-y-auto ${colors.codeBg}`}>
+                <div className={`max-h-64 overflow-y-auto ${palette.codeBg}`}>
                   {viewMode === 'highlight' ? (
                     <SyntaxHighlighter
                       language={detectLanguage(getText || '')}
@@ -492,7 +489,7 @@ export default function Home() {
                       {getText || ''}
                     </SyntaxHighlighter>
                   ) : (
-                    <pre className={`p-4 text-sm ${colors.text} font-mono whitespace-pre-wrap break-words`}>
+                    <pre className={`p-4 text-sm ${palette.text} whitespace-pre-wrap break-words`}>
                       {getText || ''}
                     </pre>
                   )}
@@ -501,7 +498,7 @@ export default function Home() {
             )}
           </div>
         )}
-      </div>
+      </section>
 
       <div className="mt-8 w-full max-w-lg">
         <Script
@@ -523,28 +520,31 @@ export default function Home() {
       </div>
 
       {showAbout && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-          <div className={`w-full max-w-md p-6 ${colors.cardBg} border-4 ${colors.border} shadow-[8px_8px_0px_0px_var(--shadow-color)]`} style={{ ['--shadow-color' as string]: isMocha ? '#11111B' : '#1A1A2E' }}>
-            <h2 className={`text-2xl font-black uppercase ${colors.text}`}>О сервисе</h2>
-            <p className={`mt-3 text-sm font-medium ${colors.text}`}>
-              qtxt - анонимный обменник текстом и маленькими файлами по короткому коду.
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm">
+          <div
+            className={`w-full max-w-md rounded-2xl border-2 p-6 ${palette.cardBg} ${palette.hardBorder} shadow-[0_18px_36px_0_var(--shadow-color)]`}
+            style={{ ['--shadow-color' as string]: `${palette.shadow}aa` }}
+          >
+            <h2 className={`text-2xl font-black uppercase ${palette.text}`}>О сервисе</h2>
+            <p className={`mt-3 text-sm font-medium leading-relaxed ${palette.text}`}>
+              qtxt - анонимный обменник текстом и небольшими файлами по короткому коду.
             </p>
-            <p className={`mt-2 text-sm font-medium ${colors.text}`}>
-              Данные хранятся временно и автоматически удаляются через 10 минут.
+            <p className={`mt-2 text-sm font-medium leading-relaxed ${palette.text}`}>
+              Всё хранится временно и автоматически удаляется через 10 минут.
             </p>
             <a
               href={GITHUB_URL}
               target="_blank"
               rel="noreferrer"
-              className={`mt-4 inline-block py-2 px-4 font-bold border-4 ${colors.border} ${colors.get} text-[#11111B] shadow-[4px_4px_0px_0px_var(--shadow-color)] hover:-translate-x-0.5 hover:-translate-y-0.5 transition-all`}
-              style={{ ['--shadow-color' as string]: isMocha ? '#11111B' : '#1A1A2E' }}
+              className={`mt-4 inline-block rounded-lg border-2 px-4 py-2 text-sm font-bold transition-all ${palette.accentGet} ${palette.okText} ${palette.hardBorder} shadow-[2px_2px_0px_0px_var(--shadow-color)] hover:-translate-y-0.5`}
+              style={{ ['--shadow-color' as string]: palette.shadow }}
             >
               GitHub
             </a>
             <button
               onClick={() => setShowAbout(false)}
-              className={`mt-4 w-full py-3 px-4 font-black uppercase border-4 ${colors.border} ${colors.share} text-[#11111B] shadow-[4px_4px_0px_0px_var(--shadow-color)] hover:-translate-x-0.5 hover:-translate-y-0.5 transition-all`}
-              style={{ ['--shadow-color' as string]: isMocha ? '#11111B' : '#1A1A2E' }}
+              className={`mt-4 w-full rounded-xl border-2 px-4 py-3 text-sm font-black uppercase transition-all ${palette.accentShare} ${palette.okText} ${palette.hardBorder} shadow-[3px_3px_0px_0px_var(--shadow-color)] hover:-translate-y-0.5`}
+              style={{ ['--shadow-color' as string]: palette.shadow }}
             >
               Закрыть
             </button>
