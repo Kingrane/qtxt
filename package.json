@@ -1,7 +1,7 @@
 {
-  "name": "untitled1",
-  "version": "0.1.0",
-  "private": true,
+  "name": "qtxt",
+  "version": "0.2.0",
+  "private": false,
   "scripts": {
     "dev": "next dev",
     "build": "next build",

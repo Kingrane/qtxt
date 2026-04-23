@@ -7,13 +7,13 @@ import './globals.css';
 const comfortaa = Comfortaa({
   subsets: ['latin', 'cyrillic'],
   weight: ['400', '500', '600', '700'],
-  variable: '--font-comfortaa'
+  variable: '--font-comfortaa',
 });
 
 const inter = Inter({
   subsets: ['latin', 'cyrillic'],
   weight: ['400', '500', '600', '700'],
-  variable: '--font-inter'
+  variable: '--font-inter',
 });
 
 export const metadata: Metadata = {
@@ -28,7 +28,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ru">
-      <body className={`${comfortaa.className} ${inter.variable}`}>
+      <body className={`${comfortaa.variable} ${comfortaa.className} ${inter.variable}`}>
         {/* Yandex.RTB Loader Code */}
         <Script id="yandex-rtb-loader" strategy="beforeInteractive" dangerouslySetInnerHTML={{
           __html: `window.yaContextCb=window.yaContextCb||[]`

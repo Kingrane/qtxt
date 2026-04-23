@@ -3,9 +3,15 @@ import { kv } from '@vercel/kv';
 import { nanoid } from 'nanoid';
 import { NextRequest, NextResponse } from 'next/server';
 
+const MAX_TEXT_BYTES = 20 * 1024;
+
 function isValidCustomCode(code: string): boolean {
   const trimmed = code.trim();
   return trimmed.length >= 4 && trimmed.length <= 10 && /^[a-zA-Z0-9_-]+$/.test(trimmed);
+}
+
+function getByteLength(value: string): number {
+  return new TextEncoder().encode(value).length;
 }
 
 export async function POST(request: NextRequest) {
@@ -14,6 +20,10 @@ export async function POST(request: NextRequest) {
 
     if (!text || typeof text !== 'string') {
       return NextResponse.json({ error: 'Текст обязателен' }, { status: 400 });
+    }
+
+    if (getByteLength(text) > MAX_TEXT_BYTES) {
+      return NextResponse.json({ error: 'Слишком большой текст. Максимум 20KB.' }, { status: 413 });
     }
 
     let code: string;
