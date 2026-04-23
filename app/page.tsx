@@ -246,6 +246,13 @@ export default function Home() {
         <div className={`absolute -left-16 top-10 h-56 w-56 rounded-full blur-3xl ${isMocha ? 'bg-[#94e2d54d]' : 'bg-[#4ecdc44d]'}`} />
         <div className={`absolute -right-20 bottom-12 h-64 w-64 rounded-full blur-3xl ${isMocha ? 'bg-[#cba6f74d]' : 'bg-[#c9b1ff4d]'}`} />
         <div className={`absolute left-1/2 top-1/3 h-36 w-36 -translate-x-1/2 rounded-full blur-2xl ${isMocha ? 'bg-[#f9e2af33]' : 'bg-[#ffe66d40]'}`} />
+        <div
+          className="absolute inset-0 opacity-25"
+          style={{
+            backgroundImage: 'radial-gradient(circle at 1px 1px, rgba(0,0,0,0.08) 1px, transparent 0)',
+            backgroundSize: '12px 12px',
+          }}
+        />
       </div>
 
       <header className="fixed left-1/2 top-3 z-40 -translate-x-1/2">
@@ -257,7 +264,7 @@ export default function Home() {
             onClick={() => setInputMode('text')}
             title="Текст"
             aria-label="Режим текста"
-            className={`inline-flex h-9 w-9 items-center justify-center rounded-lg border-2 transition-all ${palette.hardBorder} ${inputMode === 'text' ? `${palette.accentShare} ${palette.okText} shadow-[2px_2px_0px_0px_var(--shadow-color)]` : `${palette.softBg} ${palette.text} hover:-translate-y-0.5 hover:shadow-[2px_2px_0px_0px_var(--shadow-color)]`}`}
+            className={`inline-flex h-9 w-9 items-center justify-center rounded-lg border-2 transition-all active:scale-95 ${palette.hardBorder} ${inputMode === 'text' ? `${palette.accentShare} ${palette.okText} shadow-[2px_2px_0px_0px_var(--shadow-color)]` : `${palette.softBg} ${palette.text} hover:-translate-y-0.5 hover:shadow-[2px_2px_0px_0px_var(--shadow-color)]`}`}
             style={{ ['--shadow-color' as string]: palette.shadow }}
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.3">
@@ -268,7 +275,7 @@ export default function Home() {
             onClick={() => setInputMode('file')}
             title="Файлы"
             aria-label="Режим файлов"
-            className={`inline-flex h-9 w-9 items-center justify-center rounded-lg border-2 transition-all ${palette.hardBorder} ${inputMode === 'file' ? `${palette.accentGet} ${palette.okText} shadow-[2px_2px_0px_0px_var(--shadow-color)]` : `${palette.softBg} ${palette.text} hover:-translate-y-0.5 hover:shadow-[2px_2px_0px_0px_var(--shadow-color)]`}`}
+            className={`inline-flex h-9 w-9 items-center justify-center rounded-lg border-2 transition-all active:scale-95 ${palette.hardBorder} ${inputMode === 'file' ? `${palette.accentGet} ${palette.okText} shadow-[2px_2px_0px_0px_var(--shadow-color)]` : `${palette.softBg} ${palette.text} hover:-translate-y-0.5 hover:shadow-[2px_2px_0px_0px_var(--shadow-color)]`}`}
             style={{ ['--shadow-color' as string]: palette.shadow }}
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.3">
@@ -279,7 +286,7 @@ export default function Home() {
             onClick={() => setThemeMode((currentTheme) => currentTheme === 'light' ? 'mocha' : 'light')}
             title={isMocha ? 'Светлая тема' : 'Темная тема'}
             aria-label={isMocha ? 'Включить светлую тему' : 'Включить темную тему'}
-            className={`inline-flex h-9 w-9 items-center justify-center rounded-lg border-2 transition-all ${palette.hardBorder} ${palette.accentAlt} ${palette.okText} hover:-translate-y-0.5 hover:shadow-[2px_2px_0px_0px_var(--shadow-color)]`}
+            className={`inline-flex h-9 w-9 items-center justify-center rounded-lg border-2 transition-all active:scale-95 ${palette.hardBorder} ${palette.accentAlt} ${palette.okText} hover:-translate-y-0.5 hover:shadow-[2px_2px_0px_0px_var(--shadow-color)]`}
             style={{ ['--shadow-color' as string]: palette.shadow }}
           >
             {isMocha ? (
@@ -296,7 +303,7 @@ export default function Home() {
             onClick={() => setShowAbout(true)}
             title="Инфо"
             aria-label="О сервисе"
-            className={`inline-flex h-9 w-9 items-center justify-center rounded-lg border-2 transition-all ${palette.hardBorder} ${palette.softBg} ${palette.text} hover:-translate-y-0.5 hover:shadow-[2px_2px_0px_0px_var(--shadow-color)]`}
+            className={`inline-flex h-9 w-9 items-center justify-center rounded-lg border-2 transition-all active:scale-95 ${palette.hardBorder} ${palette.softBg} ${palette.text} hover:-translate-y-0.5 hover:shadow-[2px_2px_0px_0px_var(--shadow-color)]`}
             style={{ ['--shadow-color' as string]: palette.shadow }}
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.3">
@@ -307,10 +314,9 @@ export default function Home() {
       </header>
 
       <section
-        className={`relative w-full max-w-xl rounded-[1.6rem] border-2 p-5 sm:p-8 ${palette.border} ${palette.cardBg} shadow-[0_18px_40px_0_var(--shadow-color)]`}
+        className={`relative w-full max-w-xl rounded-[1.6rem] border-2 p-5 transition-transform duration-300 hover:-translate-y-0.5 sm:p-8 ${palette.border} ${palette.cardBg} shadow-[0_18px_40px_0_var(--shadow-color)]`}
         style={{ ['--shadow-color' as string]: `${palette.shadow}99` }}
       >
-        <div className={`absolute left-5 right-5 top-0 h-px ${isMocha ? 'bg-[#f9e2af66]' : 'bg-[#ff6b6b66]'}`} />
         <h1 className={`text-center text-4xl font-black uppercase tracking-tight sm:text-5xl ${palette.text}`}>qtxt</h1>
         <p className={`mt-2 text-center text-sm font-semibold ${palette.textSoft}`}>ввел код -&gt; получил текст</p>
 
