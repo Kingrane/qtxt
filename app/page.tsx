@@ -108,6 +108,7 @@ export default function Home() {
   const [getLoading, setGetLoading] = useState(false);
   const [getError, setGetError] = useState<string | null>(null);
   const [textCopied, setTextCopied] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
 
   const isMocha = themeMode === 'mocha';
 
@@ -150,6 +151,31 @@ export default function Home() {
       setSelectedFileName('');
       setShareText('');
       event.target.value = '';
+    }
+  };
+
+  const handleDrop = async (event: React.DragEvent) => {
+    event.preventDefault();
+    setIsDragging(false);
+    const file = event.dataTransfer.files?.[0];
+    if (!file) return;
+
+    if (file.size > MAX_FILE_BYTES) {
+      setShareError(t.fileTooBig);
+      setSelectedFileName('');
+      setShareText('');
+      return;
+    }
+
+    try {
+      const fileText = await readFileAsText(file, t);
+      setShareText(fileText);
+      setSelectedFileName(file.name);
+      setShareError(null);
+    } catch (error) {
+      setShareError(error instanceof Error ? error.message : t.fileReadErrorShort);
+      setSelectedFileName('');
+      setShareText('');
     }
   };
 
@@ -378,9 +404,14 @@ export default function Home() {
                 }}
               />
             ) : (
-              <div className={`p-4 ${colors.inputBg} border-4 border-dashed ${colors.border}`}>
+              <div
+                className={`p-4 ${colors.inputBg} border-4 border-dashed ${isDragging ? `${colors.share}` : `${colors.border}`} transition-colors`}
+                onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
+                onDragLeave={() => setIsDragging(false)}
+                onDrop={handleDrop}
+              >
                 <label className={`block text-sm font-bold ${colors.text}`}>
-                  {t.fileLabel}
+                  {isDragging ? t.dropHere : t.fileLabel}
                 </label>
                 <label className={`mt-3 inline-block py-2 px-4 font-bold border-4 ${colors.border} ${colors.share} text-[#11111B] text-sm cursor-pointer hover:shadow-[3px_3px_0px_0px_var(--shadow-color)] hover:-translate-x-0.5 hover:-translate-y-0.5 transition-all`}
                   style={{ ['--shadow-color' as string]: isMocha ? '#11111B' : '#1A1A2E' }}
