@@ -39,6 +39,9 @@ Requires Vercel KV env vars (`KV_URL`, `KV_REST_API_URL`, `KV_REST_API_TOKEN`, `
 
 Никаких аккаунтов, истории и трекинга.
 
+
+## Локально
+
 ```bash
 npm install
 npm run dev
