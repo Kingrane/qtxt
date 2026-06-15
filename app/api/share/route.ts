@@ -19,11 +19,11 @@ export async function POST(request: NextRequest) {
     const { text, customCode } = await request.json();
 
     if (!text || typeof text !== 'string') {
-      return NextResponse.json({ error: 'Текст обязателен' }, { status: 400 });
+      return NextResponse.json({ error: 'TEXT_REQUIRED' }, { status: 400 });
     }
 
     if (getByteLength(text) > MAX_TEXT_BYTES) {
-      return NextResponse.json({ error: 'Слишком большой текст. Максимум 20KB.' }, { status: 413 });
+      return NextResponse.json({ error: 'TEXT_TOO_LARGE' }, { status: 413 });
     }
 
     let code: string;
@@ -31,7 +31,7 @@ export async function POST(request: NextRequest) {
     if (customCode && typeof customCode === 'string') {
       const trimmedCode = customCode.trim();
       if (!isValidCustomCode(trimmedCode)) {
-        return NextResponse.json({ error: 'Код должен быть 4-10 символов (a-z, A-Z, 0-9, _, -)' }, { status: 400 });
+        return NextResponse.json({ error: 'INVALID_CODE' }, { status: 400 });
       }
       code = trimmedCode;
     } else {
@@ -43,6 +43,6 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ code });
   } catch (error) {
     console.error(error);
-    return NextResponse.json({ error: 'Внутренняя ошибка сервера' }, { status: 500 });
+    return NextResponse.json({ error: 'SERVER_ERROR' }, { status: 500 });
   }
 }

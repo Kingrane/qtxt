@@ -8,18 +8,18 @@ export async function GET(request: NextRequest) {
     const code = searchParams.get('code');
 
     if (!code) {
-      return NextResponse.json({ error: 'Код не предоставлен :/' }, { status: 400 });
+      return NextResponse.json({ error: 'CODE_NOT_PROVIDED' }, { status: 400 });
     }
 
     const text = await kv.get<string>(code);
 
     if (!text) {
-      return NextResponse.json({ error: 'Текст не найден или устарел :(' }, { status: 404 });
+      return NextResponse.json({ error: 'TEXT_NOT_FOUND' }, { status: 404 });
     }
 
     return NextResponse.json({ text });
   } catch (error) {
     console.error(error);
-    return NextResponse.json({ error: 'Внутренняя ошибка сервера >:(' }, { status: 500 });
+    return NextResponse.json({ error: 'SERVER_ERROR_GET' }, { status: 500 });
   }
 }

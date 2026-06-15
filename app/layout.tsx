@@ -17,8 +17,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: 'qtxt - Обменник текстом',
-  description: 'text obmennik',
+  title: 'qtxt',
+  description: 'qtxt',
 };
 
 export default function RootLayout({

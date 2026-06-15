@@ -6,13 +6,15 @@ import confetti from 'canvas-confetti';
 import Script from 'next/script';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { oneDark, oneLight } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { useI18n } from '@/lib/useI18n';
+import { translateApiError } from '@/lib/i18n';
 
 type ViewMode = 'plain' | 'highlight';
 type ThemeMode = 'light' | 'mocha';
 type InputMode = 'text' | 'file';
 
 const MAX_FILE_BYTES = 20 * 1024;
-const GITHUB_URL = 'https://github.com/qtxt/qtxt';
+const GITHUB_URL = 'https://github.com/Kingrane/qtxt';
 
 const detectLanguage = (code: string): string => {
   if (!code) return 'text';
@@ -67,7 +69,7 @@ const getHighlightStyle = (themeMode: ThemeMode) => {
   };
 };
 
-const readFileAsText = async (file: File): Promise<string> => {
+const readFileAsText = async (file: File, t: { fileReadError: string; fileReadFailed: string }): Promise<string> => {
   return new Promise<string>((resolve, reject) => {
     const reader = new FileReader();
 
@@ -75,16 +77,17 @@ const readFileAsText = async (file: File): Promise<string> => {
       if (typeof reader.result === 'string') {
         resolve(reader.result);
       } else {
-        reject(new Error('Не удалось прочитать файл как текст'));
+        reject(new Error(t.fileReadError));
       }
     };
 
-    reader.onerror = () => reject(new Error('Ошибка чтения файла'));
+    reader.onerror = () => reject(new Error(t.fileReadFailed));
     reader.readAsText(file);
   });
 };
 
 export default function Home() {
+  const { t } = useI18n();
   const [mode, setMode] = useState<'share' | 'get'>('share');
   const [viewMode, setViewMode] = useState<ViewMode>('highlight');
   const [themeMode, setThemeMode] = useState<ThemeMode>('light');
@@ -130,7 +133,7 @@ export default function Home() {
     }
 
     if (file.size > MAX_FILE_BYTES) {
-      setShareError('Файл слишком большой. Максимум 20KB.');
+      setShareError(t.fileTooBig);
       setSelectedFileName('');
       setShareText('');
       event.target.value = '';
@@ -138,12 +141,12 @@ export default function Home() {
     }
 
     try {
-      const fileText = await readFileAsText(file);
+      const fileText = await readFileAsText(file, t);
       setShareText(fileText);
       setSelectedFileName(file.name);
       setShareError(null);
     } catch (error) {
-      setShareError(error instanceof Error ? error.message : 'Не удалось прочитать файл');
+      setShareError(error instanceof Error ? error.message : t.fileReadErrorShort);
       setSelectedFileName('');
       setShareText('');
       event.target.value = '';
@@ -152,7 +155,7 @@ export default function Home() {
 
   const handleShare = async () => {
     if (!shareText.trim()) {
-      setShareError(inputMode === 'file' ? 'Сначала выбери файл :P' : 'Текст не может быть пустым :P');
+      setShareError(inputMode === 'file' ? t.selectFileFirst : t.textEmpty);
       return;
     }
     setShareLoading(true);
@@ -171,7 +174,7 @@ export default function Home() {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || 'Не удалось поделиться текстом :/');
+        throw new Error(translateApiError(errorData.error, t) || t.shareFailed);
       }
 
       const data = await response.json();
@@ -183,7 +186,7 @@ export default function Home() {
         colors: isMocha ? ['#F38BA8', '#94E2D5', '#CBA6F7', '#F9E2AF'] : ['#FF6B6B', '#4ECDC4', '#C9B1FF', '#FFE66D'],
       });
     } catch (error) {
-      setShareError(error instanceof Error ? error.message : 'Неизвестная ошибка');
+      setShareError(error instanceof Error ? error.message : t.unknownError);
     } finally {
       setShareLoading(false);
     }
@@ -191,7 +194,7 @@ export default function Home() {
 
   const handleGet = async () => {
     if (!getCode.trim()) {
-      setGetError('Код не может быть пустым :P');
+      setGetError(t.codeEmpty);
       return;
     }
     setGetLoading(true);
@@ -203,7 +206,7 @@ export default function Home() {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || 'Текст не найден или устарел :(');
+        throw new Error(translateApiError(errorData.error, t) || t.textNotFound);
       }
 
       const data = await response.json();
@@ -216,7 +219,7 @@ export default function Home() {
         colors: isMocha ? ['#F38BA8', '#94E2D5', '#CBA6F7', '#F9E2AF'] : ['#FF6B6B', '#4ECDC4', '#C9B1FF', '#FFE66D'],
       });
     } catch (error) {
-      setGetError(error instanceof Error ? error.message : 'Неизвестная ошибка');
+      setGetError(error instanceof Error ? error.message : t.unknownError);
     } finally {
       setGetLoading(false);
     }
@@ -247,8 +250,8 @@ export default function Home() {
         >
           <button
             onClick={() => setInputMode('text')}
-            title="Текст"
-            aria-label="Режим текста"
+            title={t.textMode}
+            aria-label={t.textModeLabel}
             className={`inline-flex h-8 w-8 items-center justify-center font-black border-2 ${colors.border} transition-all sm:h-9 sm:w-9 ${inputMode === 'text' ? `${colors.share} ${isMocha ? 'text-[#11111B]' : 'text-[#1A1A2E]'} shadow-[2px_2px_0px_0px_var(--shadow-color)]` : `${colors.panelBg} ${colors.text} hover:shadow-[2px_2px_0px_0px_var(--shadow-color)] hover:-translate-x-0.5 hover:-translate-y-0.5`}`}
             style={{ ['--shadow-color' as string]: isMocha ? '#11111B' : '#1A1A2E' }}
           >
@@ -258,8 +261,8 @@ export default function Home() {
           </button>
           <button
             onClick={() => setInputMode('file')}
-            title="Файлы"
-            aria-label="Режим файлов"
+            title={t.fileMode}
+            aria-label={t.fileModeLabel}
             className={`inline-flex h-8 w-8 items-center justify-center font-black border-2 ${colors.border} transition-all sm:h-9 sm:w-9 ${inputMode === 'file' ? `${colors.get} text-[#11111B] shadow-[2px_2px_0px_0px_var(--shadow-color)]` : `${colors.panelBg} ${colors.text} hover:shadow-[2px_2px_0px_0px_var(--shadow-color)] hover:-translate-x-0.5 hover:-translate-y-0.5`}`}
             style={{ ['--shadow-color' as string]: isMocha ? '#11111B' : '#1A1A2E' }}
           >
@@ -269,8 +272,8 @@ export default function Home() {
           </button>
           <button
             onClick={() => setThemeMode((currentTheme) => currentTheme === 'light' ? 'mocha' : 'light')}
-            title={isMocha ? 'Светлая тема' : 'Темная тема'}
-            aria-label={isMocha ? 'Включить светлую тему' : 'Включить темную тему'}
+            title={isMocha ? t.lightTheme : t.darkTheme}
+            aria-label={isMocha ? t.lightThemeLabel : t.darkThemeLabel}
             className={`inline-flex h-8 w-8 items-center justify-center font-black border-2 ${colors.border} transition-all sm:h-9 sm:w-9 ${colors.purple} text-[#11111B] hover:shadow-[2px_2px_0px_0px_var(--shadow-color)] hover:-translate-x-0.5 hover:-translate-y-0.5`}
             style={{ ['--shadow-color' as string]: isMocha ? '#11111B' : '#1A1A2E' }}
           >
@@ -286,8 +289,8 @@ export default function Home() {
           </button>
           <button
             onClick={() => setShowAbout(true)}
-            title="Инфо"
-            aria-label="О сервисе"
+            title={t.info}
+            aria-label={t.infoLabel}
             className={`inline-flex h-8 w-8 items-center justify-center font-black border-2 ${colors.border} transition-all sm:h-9 sm:w-9 ${colors.panelBg} ${colors.text} hover:shadow-[2px_2px_0px_0px_var(--shadow-color)] hover:-translate-x-0.5 hover:-translate-y-0.5`}
             style={{ ['--shadow-color' as string]: isMocha ? '#11111B' : '#1A1A2E' }}
           >
@@ -312,7 +315,7 @@ export default function Home() {
               }`}
             style={{ ['--shadow-color' as string]: isMocha ? '#11111B' : '#1A1A2E' }}
           >
-            Поделиться
+            {t.share}
           </button>
           <button
             onClick={() => setMode('get')}
@@ -322,7 +325,7 @@ export default function Home() {
               }`}
             style={{ ['--shadow-color' as string]: isMocha ? '#11111B' : '#1A1A2E' }}
           >
-            Получить
+            {t.getCode}
           </button>
         </div>
 
@@ -337,7 +340,7 @@ export default function Home() {
                   }`}
                 style={{ ['--shadow-color' as string]: isMocha ? '#11111B' : '#1A1A2E' }}
               >
-                Случайный код
+                {t.randomCode}
               </button>
               <button
                 onClick={() => setUseCustomCode(true)}
@@ -347,7 +350,7 @@ export default function Home() {
                   }`}
                 style={{ ['--shadow-color' as string]: isMocha ? '#11111B' : '#1A1A2E' }}
               >
-                Свой код
+                {t.customCode}
               </button>
             </div>
 
@@ -356,7 +359,7 @@ export default function Home() {
                 type="text"
                 value={customCode}
                 onChange={(event) => setCustomCode(event.target.value)}
-                placeholder="Код (4-10 символов)"
+                placeholder={t.codePlaceholder}
                 maxLength={10}
                 className={`w-full p-4 ${colors.inputBg} ${colors.text} border-4 ${colors.border} focus:outline-none focus:shadow-[6px_6px_0px_0px_var(--shadow-color)] transition-shadow font-bold ${colors.placeholder}`}
                 style={{ ['--shadow-color' as string]: isMocha ? '#11111B' : '#1A1A2E' }}
@@ -367,7 +370,7 @@ export default function Home() {
               <textarea
                 value={shareText}
                 onChange={(event) => setShareText(event.target.value)}
-                placeholder="Введите ваш текст здесь..."
+                placeholder={t.textPlaceholder}
                 className={`w-full h-40 p-4 ${colors.inputBg} ${colors.text} border-4 ${colors.border} resize-none focus:outline-none focus:shadow-[6px_6px_0px_0px_var(--shadow-color)] transition-shadow font-medium ${colors.placeholder} placeholder:font-normal`}
                 style={{
                   ['--shadow-color' as string]: isMocha ? '#11111B' : '#1A1A2E',
@@ -377,11 +380,11 @@ export default function Home() {
             ) : (
               <div className={`p-4 ${colors.inputBg} border-4 border-dashed ${colors.border}`}>
                 <label className={`block text-sm font-bold ${colors.text}`}>
-                  Выбери текстовый файл (до 20KB)
+                  {t.fileLabel}
                 </label>
                 <input type="file" onChange={handleFileChange} className={`mt-3 w-full text-sm ${colors.text}`} />
                 {selectedFileName && (
-                  <p className={`mt-3 text-sm font-bold ${colors.text}`}>Файл: {selectedFileName}</p>
+                  <p className={`mt-3 text-sm font-bold ${colors.text}`}>{t.fileName}: {selectedFileName}</p>
                 )}
               </div>
             )}
@@ -392,7 +395,7 @@ export default function Home() {
               className={`w-full py-4 px-6 ${colors.share} text-[#11111B] font-black text-lg uppercase border-4 ${colors.border} shadow-[6px_6px_0px_0px_var(--shadow-color)] hover:shadow-[8px_8px_0px_0px_var(--shadow-color)] hover:-translate-x-1 hover:-translate-y-1 disabled:bg-[#7f849c] disabled:cursor-not-allowed disabled:transform-none transition-all active:shadow-[2px_2px_0px_0px_var(--shadow-color)] active:translate-x-1 active:translate-y-1`}
               style={{ ['--shadow-color' as string]: isMocha ? '#11111B' : '#1A1A2E' }}
             >
-              {shareLoading ? 'Создание ссылки...' : 'Поделиться'}
+              {shareLoading ? t.shareLoading : t.shareButton}
             </button>
 
             {shareError && (
@@ -405,7 +408,7 @@ export default function Home() {
               <div className={`p-6 ${colors.purple} border-4 ${colors.border} shadow-[6px_6px_0px_0px_var(--shadow-color)]`} style={{ ['--shadow-color' as string]: isMocha ? '#11111B' : '#1A1A2E' }}>
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-xs font-bold text-[#11111B] mb-2 uppercase tracking-wider">Ваш код</p>
+                    <p className="text-xs font-bold text-[#11111B] mb-2 uppercase tracking-wider">{t.yourCode}</p>
                     <p className="text-3xl font-black text-[#11111B] break-all" style={{ fontFamily: 'var(--font-inter), sans-serif' }}>
                       {shareCode}
                     </p>
@@ -416,14 +419,14 @@ export default function Home() {
                     style={{ ['--shadow-color' as string]: isMocha ? '#11111B' : '#1A1A2E' }}
                   >
                     {copied ? (
-                      <span className="text-sm font-bold text-[#11111B]">OK</span>
+                      <span className="text-sm font-bold text-[#11111B]">{t.copied}</span>
                     ) : (
-                      <span className="text-sm font-bold text-[#11111B]">Копировать</span>
+                      <span className="text-sm font-bold text-[#11111B]">{t.copy}</span>
                     )}
                   </button>
                 </div>
                 <p className="text-xs font-bold text-[#11111B] mt-4 opacity-80">
-                  Текст будет удален через 10 минут.
+                  {t.deleteNotice}
                 </p>
               </div>
             )}
@@ -436,7 +439,7 @@ export default function Home() {
               type="text"
               value={getCode}
               onChange={(event) => setGetCode(event.target.value)}
-              placeholder="Введите код для получения текста"
+              placeholder={t.codeInputPlaceholder}
               className={`w-full p-4 ${colors.inputBg} ${colors.text} border-4 ${colors.border} focus:outline-none focus:shadow-[6px_6px_0px_0px_var(--shadow-color)] transition-shadow font-bold text-lg ${colors.placeholder} placeholder:normal-case placeholder:font-normal placeholder:text-base`}
               style={{ ['--shadow-color' as string]: isMocha ? '#11111B' : '#1A1A2E' }}
             />
@@ -446,7 +449,7 @@ export default function Home() {
               className={`w-full py-4 px-6 ${colors.get} text-[#11111B] font-black text-lg uppercase border-4 ${colors.border} shadow-[6px_6px_0px_0px_var(--shadow-color)] hover:shadow-[8px_8px_0px_0px_var(--shadow-color)] hover:-translate-x-1 hover:-translate-y-1 disabled:bg-[#7f849c] disabled:cursor-not-allowed disabled:transform-none transition-all active:shadow-[2px_2px_0px_0px_var(--shadow-color)] active:translate-x-1 active:translate-y-1`}
               style={{ ['--shadow-color' as string]: isMocha ? '#11111B' : '#1A1A2E' }}
             >
-              {getLoading ? 'Загрузка...' : 'Получить текст'}
+              {getLoading ? t.getLoading : t.getButton}
             </button>
             {getError && (
               <div className={`p-4 ${isMocha ? 'bg-[#EBA0AC]' : 'bg-[#FF6B6B]'} border-4 ${colors.border} text-center`}>
@@ -456,21 +459,21 @@ export default function Home() {
             {getText && (
               <div className={`${colors.inputBg} border-4 ${colors.border} shadow-[6px_6px_0px_0px_var(--shadow-color)]`} style={{ ['--shadow-color' as string]: isMocha ? '#11111B' : '#1A1A2E' }}>
                 <div className={`flex items-center justify-between px-4 py-3 ${colors.get} border-b-4 ${colors.border}`}>
-                  <p className="text-sm font-bold text-[#11111B] uppercase tracking-wider">Ваш текст</p>
+                  <p className="text-sm font-bold text-[#11111B] uppercase tracking-wider">{t.yourText}</p>
                   <div className="flex items-center gap-2">
                     <button
                       onClick={() => setViewMode(viewMode === 'highlight' ? 'plain' : 'highlight')}
                       className={`flex items-center gap-1 px-3 py-1.5 ${colors.buttonBg} border-2 ${colors.border} text-sm font-bold text-[#11111B] hover:shadow-[3px_3px_0px_0px_var(--shadow-color)] hover:-translate-x-0.5 hover:-translate-y-0.5 transition-all`}
                       style={{ ['--shadow-color' as string]: isMocha ? '#11111B' : '#1A1A2E' }}
                     >
-                      <span>{viewMode === 'highlight' ? 'Обычный' : 'Подсветка'}</span>
+                      <span>{viewMode === 'highlight' ? t.plain : t.highlight}</span>
                     </button>
                     <button
                       onClick={handleCopyText}
                       className={`flex items-center gap-2 px-3 py-1.5 ${colors.buttonBg} border-2 ${colors.border} text-sm font-bold text-[#11111B] hover:shadow-[3px_3px_0px_0px_var(--shadow-color)] hover:-translate-x-0.5 hover:-translate-y-0.5 transition-all`}
                       style={{ ['--shadow-color' as string]: isMocha ? '#11111B' : '#1A1A2E' }}
                     >
-                      <span>{textCopied ? 'Скопировано!' : 'Копировать'}</span>
+                      <span>{textCopied ? t.copiedText : t.copy}</span>
                     </button>
                   </div>
                 </div>
@@ -525,12 +528,12 @@ export default function Home() {
       {showAbout && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
           <div className={`w-full max-w-md p-6 ${colors.cardBg} border-4 ${colors.border} shadow-[8px_8px_0px_0px_var(--shadow-color)]`} style={{ ['--shadow-color' as string]: isMocha ? '#11111B' : '#1A1A2E' }}>
-            <h2 className={`text-2xl font-black uppercase ${colors.text}`}>О сервисе</h2>
+            <h2 className={`text-2xl font-black uppercase ${colors.text}`}>{t.aboutTitle}</h2>
             <p className={`mt-3 text-sm font-medium ${colors.text}`}>
-              qtxt - анонимный обменник текстом и маленькими файлами по короткому коду.
+              {t.aboutDesc1}
             </p>
             <p className={`mt-2 text-sm font-medium ${colors.text}`}>
-              Данные хранятся временно и автоматически удаляются через 10 минут.
+              {t.aboutDesc2}
             </p>
             <a
               href={GITHUB_URL}
@@ -546,7 +549,7 @@ export default function Home() {
               className={`mt-4 w-full py-3 px-4 font-black uppercase border-4 ${colors.border} ${colors.share} text-[#11111B] shadow-[4px_4px_0px_0px_var(--shadow-color)] hover:-translate-x-0.5 hover:-translate-y-0.5 transition-all`}
               style={{ ['--shadow-color' as string]: isMocha ? '#11111B' : '#1A1A2E' }}
             >
-              Закрыть
+              {t.close}
             </button>
           </div>
         </div>
