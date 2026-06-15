@@ -382,7 +382,12 @@ export default function Home() {
                 <label className={`block text-sm font-bold ${colors.text}`}>
                   {t.fileLabel}
                 </label>
-                <input type="file" onChange={handleFileChange} className={`mt-3 w-full text-sm ${colors.text}`} />
+                <label className={`mt-3 inline-block py-2 px-4 font-bold border-4 ${colors.border} ${colors.share} text-[#11111B] text-sm cursor-pointer hover:shadow-[3px_3px_0px_0px_var(--shadow-color)] hover:-translate-x-0.5 hover:-translate-y-0.5 transition-all`}
+                  style={{ ['--shadow-color' as string]: isMocha ? '#11111B' : '#1A1A2E' }}
+                >
+                  {t.selectFile}
+                  <input type="file" onChange={handleFileChange} className="hidden" />
+                </label>
                 {selectedFileName && (
                   <p className={`mt-3 text-sm font-bold ${colors.text}`}>{t.fileName}: {selectedFileName}</p>
                 )}
