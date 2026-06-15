@@ -25,6 +25,8 @@ type TranslationKeys = {
   codePlaceholder: string;
   textPlaceholder: string;
   fileLabel: string;
+  selectFile: string;
+  dropHere: string;
   fileName: string;
   shareButton: string;
   shareLoading: string;
